@@ -4,6 +4,34 @@ simple graphics is a lightweight python graphics package that offers a more read
 
 simple graphics is meant to be extremely readable, allowing you to focus on the logic of your code instead of graphic specifics 
 
+## Installation
+
+### pip
+```bash
+pip install simple-graphics-lib
+```
+
+## Quick Start
+```python
+from simple_graphics import *
+
+# Create shapes
+rect = Rect(50, 50, 100, 100, color="blue")
+circle = Circle(200, 200, radius=50, color="red")
+
+# Define event handlers
+@on_click(rect)
+def on_rect_click():
+    print("Rectangle clicked!")
+
+@on_press("space")
+def on_space_press():
+    print("Space pressed!")
+
+# Run the window
+run(width=400, height=400, caption="My Graphics App")
+```
+
 ## Shapes
 
 Simple Graphics offers support for various shapes, that will automatically appear on the screen when defined
