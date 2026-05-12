@@ -1,3 +1,4 @@
+[![PyPI](https://img.shields.io/pypi/v/simple-graphics-lib)](https://pypi.org/project/simple-graphics-lib/)
 # Simple Graphics
 --- 
 simple graphics is a lightweight python graphics package that offers a more readable alternative to pygame
@@ -5,7 +6,6 @@ simple graphics is a lightweight python graphics package that offers a more read
 simple graphics is meant to be extremely readable, allowing you to focus on the logic of your code instead of graphic specifics 
 
 ## Installation
-
 ### pip
 ```bash
 pip install simple-graphics-lib
