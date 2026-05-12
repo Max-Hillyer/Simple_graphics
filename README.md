@@ -267,3 +267,7 @@ changes the background color to black
 ### clear_screen
 `clear_screen()` clears the screen. 
 objects defined before a screen clear can no longer be interacted with
+
+### erase
+`erase()` deletes a single object
+erased objects can no longer be invoked

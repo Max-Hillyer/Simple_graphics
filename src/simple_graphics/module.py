@@ -385,6 +385,10 @@ def clear_screen():
     _shapes.clear()
 
 
+def erase(obj):
+    _shapes.remove(obj)
+
+
 def is_colliding(shape1: Shape, shape2: Shape) -> bool:
     method_name = f"{str(shape1)}_{str(shape2)}"
     method = getattr(CollisionManager, method_name, None)
