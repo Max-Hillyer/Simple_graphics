@@ -64,8 +64,8 @@ class Rect(Shape):
             ox = pygame.mouse.get_pos()[0]
         if oy == None:
             oy = pygame.mouse.get_pos()[1]
-        x_over = ox > self.x and ox < self.x + self.height
-        y_over = oy > self.y and oy < self.y + self.width
+        x_over = ox > self.x and ox < self.x + self.width
+        y_over = oy > self.y and oy < self.y + self.height
         return x_over and y_over
 
     def get_area(self):
@@ -96,7 +96,7 @@ class Circle(Shape):
         return inside
 
     def get_area(self):
-        return pi * self.radius ^ 2
+        return pi * self.radius ** 2
 
 
 class Polygon(Shape):
@@ -168,6 +168,29 @@ class Line(Shape):
         closest_y = y1 + t * dy
 
         return ((px - closest_x) ** 2 + (py - closest_y) ** 2) ** 0.5
+
+
+class Image(Shape):
+    def __init__(self, x: int, y: int, img_path: str, width: int = None, height: int = None):
+        super().__init__(x, y)
+        self.img_path = img_path
+        self.original_img = pygame.image.load(self.img_path)
+        
+        img_width, img_height = self.original_img.get_size()
+        self.width = width if width is not None else img_width
+        self.height = height if height is not None else img_height
+        
+        self.surface = pygame.transform.scale(self.original_img, (self.width, self.height))
+    
+    def is_obj_over(self, ox=None, oy=None):
+        if ox is None:
+            ox = pygame.mouse.get_pos()[0]
+        if oy is None:
+            oy = pygame.mouse.get_pos()[1]
+        
+        x_over = ox > self.x and ox < self.x + self.width
+        y_over = oy > self.y and oy < self.y + self.height
+        return x_over and y_over
 
 
 class Text(Shape):
@@ -260,6 +283,19 @@ class CollisionManager:
         text_height = text.txtsurf.get_height()
         closest_x = max(text.x, min(circle.x, text.x + text_width))
         closest_y = max(text.y, min(circle.y, text.y + text_height))
+        dist = ((circle.x - closest_x) ** 2 + (circle.y - closest_y) ** 2) ** 0.5
+        return dist < circle.radius
+
+    @staticmethod
+    def rect_image(rect, image):
+        return pygame.Rect(*rect.rect).colliderect(
+            pygame.Rect(image.x, image.y, image.width, image.height)
+        )
+
+    @staticmethod
+    def circle_image(circle, image):
+        closest_x = max(image.x, min(circle.x, image.x + image.width))
+        closest_y = max(image.y, min(circle.y, image.y + image.height))
         dist = ((circle.x - closest_x) ** 2 + (circle.y - closest_y) ** 2) ** 0.5
         return dist < circle.radius
 
@@ -494,6 +530,8 @@ def run(
                     )
             elif str(shape) == "text":
                 screen.blit(shape.txtsurf, (shape.x, shape.y))
+            elif str(shape) == "image":
+                screen.blit(shape.surface, (shape.x, shape.y))
 
         pygame.display.flip()
         clock.tick(60)

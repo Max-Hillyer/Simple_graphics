@@ -69,7 +69,7 @@ Methods:
 | Method | Purpose | Arguments | Returns | 
 | :--- | :---: | :---: | ---: | 
 | is_obj_over | determines if a point is in the circle | x: int, y:int | bool |
-| get_area | returns the area of the circle | None | bool | 
+| get_area | returns the area of the circle | None | int | 
 
 ### Polygon 
 Arguments: 
@@ -112,6 +112,15 @@ Methods:
 | :--- | :---: | :---: | ---: | 
 | is_obj_over | determines if a point is in the text | x: int, y:int | bool |
 
+### Image
+Arguments:
+| Argument | Type | Role | Default | 
+| :--- | :---: | :---: | ---: |
+| x | int | the x value of the image | None | 
+| y | int | the y value of the image | None | 
+| img_path | str | the path to the image | None |
+| width | int | the width of the image | the width from the image path | 
+| height | int | the height of the image | the height from the image path | 
 ---
 
 ## Run 
