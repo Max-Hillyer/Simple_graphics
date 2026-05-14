@@ -1,4 +1,5 @@
 import os
+
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 from inspect import signature, currentframe
@@ -96,7 +97,7 @@ class Circle(Shape):
         return inside
 
     def get_area(self):
-        return pi * self.radius ** 2
+        return pi * self.radius**2
 
 
 class Polygon(Shape):
@@ -171,23 +172,27 @@ class Line(Shape):
 
 
 class Image(Shape):
-    def __init__(self, x: int, y: int, img_path: str, width: int = None, height: int = None):
+    def __init__(
+        self, x: int, y: int, img_path: str, width: int = None, height: int = None
+    ):
         super().__init__(x, y)
         self.img_path = img_path
         self.original_img = pygame.image.load(self.img_path)
-        
+
         img_width, img_height = self.original_img.get_size()
         self.width = width if width is not None else img_width
         self.height = height if height is not None else img_height
-        
-        self.surface = pygame.transform.scale(self.original_img, (self.width, self.height))
-    
+
+        self.surface = pygame.transform.scale(
+            self.original_img, (self.width, self.height)
+        )
+
     def is_obj_over(self, ox=None, oy=None):
         if ox is None:
             ox = pygame.mouse.get_pos()[0]
         if oy is None:
             oy = pygame.mouse.get_pos()[1]
-        
+
         x_over = ox > self.x and ox < self.x + self.width
         y_over = oy > self.y and oy < self.y + self.height
         return x_over and y_over
@@ -224,6 +229,70 @@ class Text(Shape):
         x_over = ox > self.x and ox < self.x + text_width
         y_over = oy > self.y and oy < self.y + text_height
         return x_over and y_over
+
+
+class Group:
+    def __init__(self, *shapes: list[Shape]):
+        self.grouped = []
+        self.add(*shapes)
+
+    @property
+    def color(self):
+        return self._color if hasattr(self, "_color") else None
+
+    @color.setter
+    def color(self, color):
+        self._color = color
+        for shape in self.grouped:
+            if hasattr(shape, "color"):
+                shape.color = color
+
+    @property
+    def x(self):
+        if not self.grouped:
+            return 0
+        return self.grouped[0].x
+
+    @x.setter
+    def x(self, value):
+        delta = value - self.x
+        for child in self.grouped:
+            child.x += delta
+
+    @property
+    def y(self):
+        if not self.grouped:
+            return 0
+        return self.grouped[0].x
+
+    @y.setter
+    def y(self, value):
+        delta = value - self.y
+        for child in self.grouped:
+            child.y += delta
+
+    def add(self, *shapes):
+        for s in shapes:
+            if not isinstance(s, Shape):
+                raise TypeError(f"{s} must be Shape")
+            self.grouped.append(s)
+
+    def remove(self, *shapes):
+        for s in shapes:
+            self.grouped.remove(s)
+            _shapes.remove(s)
+
+    def clear(self):
+        self.grouped.clear()
+
+    def is_obj_over(self, x, y):
+        for i in self.grouped:
+            if i.is_obj_over(x, y):
+                return True
+        return False
+
+    def __str__(self):
+        return "group"
 
 
 class CollisionManager:
@@ -299,6 +368,13 @@ class CollisionManager:
         dist = ((circle.x - closest_x) ** 2 + (circle.y - closest_y) ** 2) ** 0.5
         return dist < circle.radius
 
+    @staticmethod
+    def groupcollision(group, shape):
+        for child in group.grouped:
+            if is_colliding(child, shape):
+                return True
+        return False
+
     def no_collsion_method(shape1, shape2):
         raise Exception(f"{type(shape1)} and {type(shape2)} have no collision method")
 
@@ -311,8 +387,9 @@ def check_args(func, name):
             f'Functions defined with the @{name} decorator may not take arguments\n but "{func.__name__}" was defined with {param_names}'
         )
 
-#decorartors like this get weird: if you want to be able to pass arguments in you need to handle 2 cases
-#if theres no arguments then it just takes the function as the argument
+
+# decorartors like this get weird: if you want to be able to pass arguments in you need to handle 2 cases
+# if theres no arguments then it just takes the function as the argument
 def on_tick(func: Callable):
     name = currentframe().f_code.co_name
     check_args(func, name)
@@ -426,6 +503,10 @@ def erase(obj):
 
 
 def is_colliding(shape1: Shape, shape2: Shape) -> bool:
+    if "group" == str(shape1) or "group" == str(shape2):
+        method_name = "groupcollision"
+        method = getattr(CollisionManager, method_name, None)
+        return method(shape1, shape2)
     method_name = f"{str(shape1)}_{str(shape2)}"
     method = getattr(CollisionManager, method_name, None)
     if method is None:
@@ -532,6 +613,8 @@ def run(
                 screen.blit(shape.txtsurf, (shape.x, shape.y))
             elif str(shape) == "image":
                 screen.blit(shape.surface, (shape.x, shape.y))
+            elif str(shape) == "group":
+                pass  # this stops weird edgecases while keeping good rendering
 
         pygame.display.flip()
         clock.tick(60)

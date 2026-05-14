@@ -121,6 +121,51 @@ Arguments:
 | img_path | str | the path to the image | None |
 | width | int | the width of the image | the width from the image path | 
 | height | int | the height of the image | the height from the image path | 
+
+Methods: 
+| Method | Purpose | Arguments | Returns | 
+| :--- | :---: | :---: | ---: | 
+| is_obj_over | determines if a point is in the image | x: int, y:int | bool |
+
+### Group
+Group groups a bunch of objects together, so you can treat them all as one shape, modifying x,y and color and checking for collisions for every shape in the group at once
+
+the below code creates a group of two rectangles
+```python
+r1 = Rect(20, 20)
+r2 = Rect(40, 40)
+group = Group(r1, r2)
+
+group.x += 10
+group.y -= 10
+group.color = "green"
+```
+
+Arguments:
+| Argument | Type | Role | Default | 
+| :--- | :---: | :---: | ---: |
+| *shapes | list[Shape] | the shapes to group | None |
+
+Methods:
+| Method | Purpose | Arguments | Returns | 
+| :--- | :---: | :---: | ---: | 
+| add | appends shapes to the group | *shapes | None | 
+| remove | removes shapes from the group | *shapes | None | 
+| clear | clears the group | None | None | 
+| is_obj_over | checks if a point is over the group | x, y | bool | 
+
+Examples: 
+```python
+r1 = Rect(20, 20)
+r2 = Rect(40, 40)
+group = Group(r1, r2)
+
+c1 = Circle(100,100)
+t1 = Text(300, 300, "hi")
+group.add(c1, t1)
+
+group.remove(r2, t1)
+```
 ---
 
 ## Run 
