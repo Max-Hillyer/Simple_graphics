@@ -292,6 +292,19 @@ def print_click():
 run()
 ```
 
+### on_hover
+functions defined with the `@on_hover` decorator will run whenever the specified object is being hovered over
+
+the function below will run whenever the mouse is over the rectangle 
+```python
+r1 = Rect(200,200, 100, 100)
+
+@on_hover(r1)
+def p():
+    print("hovering")
+
+run(400,400)
+```
 ---
 ## The mouse
 A mouse object is already initialized in the Simple Graphics import 

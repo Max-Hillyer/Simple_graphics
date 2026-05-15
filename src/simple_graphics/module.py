@@ -11,6 +11,7 @@ _ontick = []
 _key_funcs = {}
 _key_hold_funcs = {}
 _mouse_click_funcs = {}
+_hover_funcs = {}
 _bgcolor = "white"
 _font = "Arial"
 
@@ -317,8 +318,12 @@ class Group:
                 return True
         return False
 
-    def __str__(self):
-        return "group"
+    def __repr__(self):
+        shapes_str = ", ".join(str(s) for s in self.grouped)
+        return f"Group([{shapes_str}])"
+
+    # def __str__(self):
+    #     return "group"
 
 
 class CollisionManager:
@@ -515,6 +520,16 @@ def on_click(target: Callable | Shape):
         return decorator
 
 
+def on_hover(shape: Shape):
+    def decorator(func: Callable):
+        name = currentframe().f_code.co_name
+        check_args(func, name)
+        _hover_funcs[shape] = func
+        return func
+
+    return decorator
+
+
 def set_bg(color: str):
     global _bgcolor
     _bgcolor = color
@@ -529,14 +544,16 @@ def erase(obj):
 
 
 def is_colliding(shape1: Shape, shape2: Shape) -> bool:
-    if "group" == str(shape1) or "group" == str(shape2):
+    shapeName1 = shape1.__class__.__name__.lower()
+    shapeName2 = shape2.__class__.__name__.lower()
+    if "group" == shapeName1 or "group" == shapeName2:
         method_name = "groupcollision"
         method = getattr(CollisionManager, method_name, None)
         return method(shape1, shape2)
-    method_name = f"{str(shape1)}_{str(shape2)}"
+    method_name = f"{shapeName1}_{shapeName2}"
     method = getattr(CollisionManager, method_name, None)
     if method is None:
-        method_name = f"{str(shape2)}_{str(shape1)}"
+        method_name = f"{shapeName2}_{shapeName1}"
         method = getattr(CollisionManager, method_name, None)
         if method is None:
             raise Exception(
@@ -603,6 +620,9 @@ def run(
                     func(pygame.key.name(pygame_key))
                 else:
                     func()
+        for shape, func in _hover_funcs.items():
+            if shape.is_obj_over(mouse.x, mouse.y):
+                func()
 
         for func in _ontick:
             func()
