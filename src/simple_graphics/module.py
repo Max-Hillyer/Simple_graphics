@@ -39,7 +39,15 @@ class Shape:
         _shapes.append(self)
 
     def __str__(self):
-        return self.__class__.__name__.lower()
+        class_name = self.__class__.__name__.lower()
+        sig = signature(self.__init__)
+        params = [p for p in sig.parameters if p != "self"]
+
+        values = {}
+        for p in params:
+            if hasattr(self, p):
+                values[p] = getattr(self, p)
+        return f"{class_name}: {values}"
 
 
 class Rect(Shape):
@@ -270,6 +278,24 @@ class Group:
         delta = value - self.y
         for child in self.grouped:
             child.y += delta
+
+    def __getitem__(self, key):
+        return self.grouped[key]
+
+    def __len__(self):
+        return len(self.grouped)
+
+    def __iter__(self):
+        return iter(self.grouped)
+
+    def __contains__(self, item):
+        return item in self.grouped
+
+    def __setitem__(self, key, value):
+        self.grouped[key] = value
+
+    def __delitem__(self, key):
+        del self.grouped[key]
 
     def add(self, *shapes):
         for s in shapes:
@@ -587,20 +613,21 @@ def run(
         screen.fill(_bgcolor)
 
         for shape in _shapes:
-            if str(shape) == "circle":
+            shapeName = shape.__class__.__name__.lower()
+            if shapeName == "circle":
                 pygame.draw.circle(
                     screen, shape.color, (shape.x, shape.y), shape.radius, shape.outline
                 )
-            elif str(shape) == "rect":
+            elif shapeName == "rect":
                 pygame.draw.rect(
                     screen,
                     shape.color,
                     shape.rect,
                     shape.outline,
                 )
-            elif str(shape) == "polygon":
+            elif shapeName == "polygon":
                 pygame.draw.polygon(screen, shape.color, shape.points, shape.outline)
-            elif str(shape) == "line":
+            elif shapeName == "line":
                 for i in range(1, len(shape.points)):
                     pygame.draw.line(
                         screen,
@@ -609,11 +636,11 @@ def run(
                         shape.points[i],
                         shape.width,
                     )
-            elif str(shape) == "text":
+            elif shapeName == "text":
                 screen.blit(shape.txtsurf, (shape.x, shape.y))
-            elif str(shape) == "image":
+            elif shapeName == "image":
                 screen.blit(shape.surface, (shape.x, shape.y))
-            elif str(shape) == "group":
+            elif shapeName == "group":
                 pass  # this stops weird edgecases while keeping good rendering
 
         pygame.display.flip()
