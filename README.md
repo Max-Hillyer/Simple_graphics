@@ -327,6 +327,7 @@ to make a shape draggable, add the keyword argument to the object initialization
 r = Rect(250,250, draggable = True)
 ```
 this works for all shapes including images and text
+
 ---
 ## Miscellaneous Functions
 
