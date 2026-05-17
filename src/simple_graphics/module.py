@@ -12,6 +12,7 @@ _key_funcs = {}
 _key_hold_funcs = {}
 _mouse_click_funcs = {}
 _hover_funcs = {}
+_dragging_shape = None
 _bgcolor = "white"
 _font = "Arial"
 
@@ -32,11 +33,12 @@ mouse = Mouse()
 
 
 class Shape:
-    def __init__(self, x, y, color="black", outline=False):
+    def __init__(self, x, y, color="black", outline=False, draggable=False):
         self.x = x
         self.y = y
         self.color = color
         self.outline = int(outline)
+        self.draggable = draggable
         _shapes.append(self)
 
     def __str__(self):
@@ -60,8 +62,9 @@ class Rect(Shape):
         height: int = 10,
         color: str = "black",
         outline: bool = False,
+        draggable: bool = False,
     ):
-        super().__init__(x, y, color, outline)
+        super().__init__(x, y, color, outline, draggable)
         self.width = width
         self.height = height
 
@@ -93,8 +96,9 @@ class Circle(Shape):
         radius: int = 10,
         color: str = "black",
         outline: bool = False,
+        draggable: bool = False,
     ):
-        super().__init__(x, y, color, outline)
+        super().__init__(x, y, color, outline, draggable)
         self.radius = radius
 
     def is_obj_over(self, ox=None, oy=None):
@@ -111,11 +115,16 @@ class Circle(Shape):
 
 class Polygon(Shape):
     def __init__(
-        self, points: list[tuple], color: str = "black", outline: bool = False
+        self,
+        points: list[tuple],
+        color: str = "black",
+        outline: bool = False,
+        draggable: bool = False,
     ):
         self.color = color
         self.points = points
         self.outline = int(outline)
+        self.draggable = draggable
         _shapes.append(self)
 
     def is_obj_over(self, ox=None, oy=None):
@@ -142,10 +151,17 @@ class Polygon(Shape):
 
 
 class Line(Shape):
-    def __init__(self, points: list[tuple], width: int = 10, color: str = "black"):
+    def __init__(
+        self,
+        points: list[tuple],
+        width: int = 10,
+        color: str = "black",
+        draggable: bool = False,
+    ):
         self.color = color
         self.points = points
         self.width = width
+        self.draggable = draggable
         _shapes.append(self)
 
     def is_obj_over(self, ox=None, oy=None):
@@ -182,9 +198,15 @@ class Line(Shape):
 
 class Image(Shape):
     def __init__(
-        self, x: int, y: int, img_path: str, width: int = None, height: int = None
+        self,
+        x: int,
+        y: int,
+        img_path: str,
+        width: int = None,
+        height: int = None,
+        draggable: bool = False,
     ):
-        super().__init__(x, y)
+        super().__init__(x, y, draggable)
         self.img_path = img_path
         self.original_img = pygame.image.load(self.img_path)
 
@@ -216,8 +238,9 @@ class Text(Shape):
         color: str = "black",
         font=_font,
         size: int = 36,
+        draggable: bool = False,
     ):
-        super().__init__(x, y, color)
+        super().__init__(x, y, color, False, draggable)
         self.text = text
         self.size = size
         self.font = pygame.font.SysFont(font, size)
@@ -583,6 +606,7 @@ def run(
 
     def handle_events():
         nonlocal running
+        global _dragging_shape
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -607,6 +631,26 @@ def run(
                 for shape in _shapes:
                     if shape.is_obj_over() and shape in _mouse_click_funcs:
                         _mouse_click_funcs[shape]()
+                    if shape.draggable and shape.is_obj_over():
+                        _dragging_shape = shape
+                        break
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                _dragging_shape = None
+
+            def _move_shape(_dragging_shape):
+                if _dragging_shape is not None:
+                    if hasattr(_dragging_shape, "points"):
+                        dx = mouse.x - _dragging_shape.points[0][0]
+                        dy = mouse.y - _dragging_shape.points[0][1]
+                        _dragging_shape.points = [
+                            (p[0] + dx, p[1] + dy) for p in _dragging_shape.points
+                        ]
+                    else:
+                        _dragging_shape.x = mouse.x
+                        _dragging_shape.y = mouse.y
+
+            _move_shape(_dragging_shape)
 
         keys_pressed = pygame.key.get_pressed()
         for pygame_key, func in _key_hold_funcs.items():
