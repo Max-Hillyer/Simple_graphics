@@ -353,7 +353,20 @@ class Group:
 class CollisionManager:
     @staticmethod
     def rect_rect(rect1: Rect, rect2: Rect):
-        return pygame.Rect(*rect1.rect).colliderect(pygame.Rect(*rect2.rect))
+        for rect in [rect1, rect2]:
+            corners = [
+                (rect.x, rect.y),
+                (rect.x + rect.width, rect.y),
+                (rect.x, rect.y + rect.height),
+                (rect.x + rect.width, rect.y + rect.height),
+            ]
+            for other in [rect1, rect2]:
+                if other is rect:
+                    continue
+                for point in corners:
+                    if other.is_obj_over(*point):
+                        return True 
+        return False
 
     @staticmethod
     def rect_circle(rect: Rect, circle: Circle):
