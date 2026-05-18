@@ -21,6 +21,9 @@ pygame.init()
 
 
 class Mouse:
+    def __init__(self, hiding = False):
+        self.hiding = hiding
+        
     @property
     def x(self):
         return pygame.mouse.get_pos()[0]
@@ -29,6 +32,10 @@ class Mouse:
     def y(self):
         return pygame.mouse.get_pos()[1]
 
+    def set_hiding(self, state: bool):
+        self.hiding = state
+        pygame.mouse.set_visible(self.hiding)
+        
 
 mouse = Mouse()
 
@@ -365,7 +372,7 @@ class CollisionManager:
                     continue
                 for point in corners:
                     if other.is_obj_over(*point):
-                        return True 
+                        return True
         return False
 
     @staticmethod
@@ -566,13 +573,16 @@ def on_hover(shape: Shape):
 
     return decorator
 
-def on_drag(shape:Shape):
+
+def on_drag(shape: Shape):
     def decorator(func: Callable):
         name = currentframe().f_code.co_name
         check_args(func, name)
-        _dragging_funcs[shape] = func 
-        return func 
+        _dragging_funcs[shape] = func
+        return func
+
     return decorator
+
 
 def set_bg(color: str):
     global _bgcolor
