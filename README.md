@@ -305,6 +305,20 @@ def p():
 
 run(400,400)
 ```
+
+### on_drag
+functions defined with the `@on_drag` decorator will run whenever the specified object is being dragged
+
+the function below will run whenevr the r1 rect is being dragged
+```python
+r1 = Rect(200,200,draggable = True)
+
+@on_drag(r1)
+def do_something():
+    print("dragging r1")
+
+run(400,400)
+```
 ---
 ## The mouse
 A mouse object is already initialized in the Simple Graphics import 
