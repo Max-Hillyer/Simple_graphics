@@ -23,7 +23,7 @@ pygame.init()
 class Mouse:
     def __init__(self, hiding = False):
         self.hiding = hiding
-        
+
     @property
     def x(self):
         return pygame.mouse.get_pos()[0]
@@ -33,6 +33,7 @@ class Mouse:
         return pygame.mouse.get_pos()[1]
 
     def set_hiding(self, state: bool):
+        """Sets the mouse visibility"""
         self.hiding = state
         pygame.mouse.set_visible(self.hiding)
         
@@ -41,7 +42,17 @@ mouse = Mouse()
 
 
 class Shape:
+    """Base class for all drawable shapes. Do not instantiate directly."""
     def __init__(self, x, y, color="black", outline=False, draggable=False):
+        """Initialize a shape at position (x, y).
+        
+        Args:
+            x: X coordinate (pixels from left)
+            y: Y coordinate (pixels from top)
+            color: Color as hex string (#RRGGBB) or name (default: "black")
+            outline: If True, draw outline only; if False, fill shape (default: False)
+            draggable: If True, shape can be moved by mouse (default: False)
+        """
         self.x = x
         self.y = y
         self.color = color
@@ -50,6 +61,7 @@ class Shape:
         _shapes.append(self)
 
     def __str__(self):
+        """Return string representation showing shape type and parameters"""
         class_name = self.__class__.__name__.lower()
         sig = signature(self.__init__)
         params = [p for p in sig.parameters if p != "self"]
@@ -81,6 +93,15 @@ class Rect(Shape):
         return (self.x, self.y, self.width, self.height)
 
     def is_obj_over(self, ox=None, oy=None):
+        """Check if a point is inside this rectangle.
+        
+        Args:
+            ox: X coordinate (default: current mouse x)
+            oy: Y coordinate (default: current mouse y)
+            
+        Returns:
+            bool: True if point is inside rectangle, False otherwise
+        """
         if ox == None:
             ox = pygame.mouse.get_pos()[0]
         if oy == None:
@@ -90,9 +111,11 @@ class Rect(Shape):
         return x_over and y_over
 
     def get_area(self):
+        """Calculate and return the area of the rectangle"""
         return self.width * self.height
 
     def get_perimeter(self):
+        """Calculate and return the perimeter of the rectangle"""
         return (2 * self.width) + (2 * self.height)
 
 
@@ -110,6 +133,15 @@ class Circle(Shape):
         self.radius = radius
 
     def is_obj_over(self, ox=None, oy=None):
+        """Check if a point is inside this circle.
+        
+        Args:
+            ox: X coordinate (default: current mouse x)
+            oy: Y coordinate (default: current mouse y)
+            
+        Returns:
+            bool: True if point is inside circle, False otherwise
+        """
         if ox == None:
             ox = pygame.mouse.get_pos()[0]
         if oy == None:
@@ -118,6 +150,7 @@ class Circle(Shape):
         return inside
 
     def get_area(self):
+        """Calculate and return the area of the circle."""
         return pi * self.radius**2
 
 
@@ -136,6 +169,15 @@ class Polygon(Shape):
         _shapes.append(self)
 
     def is_obj_over(self, ox=None, oy=None):
+        """Check if a point is inside this polygon using ray casting algorithm.
+        
+        Args:
+            ox: X coordinate (default: current mouse x)
+            oy: Y coordinate (default: current mouse y)
+            
+        Returns:
+            bool: True if point is inside polygon, False otherwise
+        """
         if ox == None:
             ox = pygame.mouse.get_pos()[0]
         if oy == None:
@@ -173,6 +215,15 @@ class Line(Shape):
         _shapes.append(self)
 
     def is_obj_over(self, ox=None, oy=None):
+        """Check if a point is near this line (within line width).
+        
+        Args:
+            ox: X coordinate (default: current mouse x)
+            oy: Y coordinate (default: current mouse y)
+            
+        Returns:
+            bool: True if point is within line width, False otherwise
+        """
         if ox == None:
             ox = pygame.mouse.get_pos()[0]
         if oy == None:
@@ -190,6 +241,7 @@ class Line(Shape):
         return False
 
     def _distance_to_segment(self, px, py, x1, y1, x2, y2):
+        """Calculate shortest distance from a point to a line segment."""
         dx = x2 - x1
         dy = y2 - y1
 
@@ -227,6 +279,15 @@ class Image(Shape):
         )
 
     def is_obj_over(self, ox=None, oy=None):
+        """Check if a point is inside this image rectangle.
+        
+        Args:
+            ox: X coordinate (default: current mouse x)
+            oy: Y coordinate (default: current mouse y)
+            
+        Returns:
+            bool: True if point is inside image bounds, False otherwise
+        """
         if ox is None:
             ox = pygame.mouse.get_pos()[0]
         if oy is None:
@@ -255,9 +316,19 @@ class Text(Shape):
 
     @property
     def txtsurf(self):
+        """Render and return the text surface for drawing on screen."""
         return self.font.render(str(self.text), True, self.color)
 
     def is_obj_over(self, ox=None, oy=None):
+        """Check if a point is inside this text's bounding box.
+        
+        Args:
+            ox: X coordinate (default: current mouse x)
+            oy: Y coordinate (default: current mouse y)
+            
+        Returns:
+            bool: True if point is inside text bounds, False otherwise
+        """
         if ox == None:
             ox = pygame.mouse.get_pos()[0]
         if oy == None:
@@ -272,7 +343,17 @@ class Text(Shape):
 
 
 class Group:
+    """Container for grouping multiple shapes for batch operations.
+    
+    Allows moving, coloring, and interacting with multiple shapes as one unit.
+    Implements the full Python container protocol (__len__, __iter__, etc.).
+    """
     def __init__(self, *shapes: list[Shape]):
+        """Initialize group with optional initial shapes.
+        
+        Args:
+            *shapes: Variable number of Shape objects to add initially
+        """
         self.grouped = []
         self.add(*shapes)
 
@@ -330,20 +411,43 @@ class Group:
         del self.grouped[key]
 
     def add(self, *shapes):
+        """Add one or more shapes to the group.
+        
+        Args:
+            *shapes: One or more Shape objects to add
+            
+        Raises:
+            TypeError: If any argument is not a Shape
+        """
         for s in shapes:
             if not isinstance(s, Shape):
                 raise TypeError(f"{s} must be Shape")
             self.grouped.append(s)
 
     def remove(self, *shapes):
+        """Remove one or more shapes from the group.
+        
+        Args:
+            *shapes: One or more Shape objects to remove
+        """
         for s in shapes:
             self.grouped.remove(s)
             _shapes.remove(s)
 
     def clear(self):
+        """Remove all shapes from the group."""
         self.grouped.clear()
 
     def is_obj_over(self, x, y):
+        """Check if any shape in group contains the point.
+        
+        Args:
+            x: X coordinate
+            y: Y coordinate
+            
+        Returns:
+            bool: True if any child shape contains point, False otherwise
+        """
         for i in self.grouped:
             if i.is_obj_over(x, y):
                 return True
@@ -358,8 +462,10 @@ class Group:
 
 
 class CollisionManager:
+    """Static utility class containing collision detection for all shape combinations."""
     @staticmethod
     def rect_rect(rect1: Rect, rect2: Rect):
+        """Check if two rectangles are colliding."""
         for rect in [rect1, rect2]:
             corners = [
                 (rect.x, rect.y),
@@ -377,6 +483,7 @@ class CollisionManager:
 
     @staticmethod
     def rect_circle(rect: Rect, circle: Circle):
+        """Check if a rectangle and circle are colliding."""
         closest_x = max(rect.x, min(circle.x, rect.x + rect.width))
         closest_y = max(rect.y, min(circle.y, rect.y + rect.height))
         dist = ((circle.x - closest_x) ** 2 + (circle.y - closest_y) ** 2) ** 0.5
@@ -384,11 +491,13 @@ class CollisionManager:
 
     @staticmethod
     def circle_circle(circle1: Circle, circle2: Circle):
+        """Check if two circles are colliding."""
         dist = ((circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2) ** 0.5
         return dist < circle1.radius + circle2.radius
 
     @staticmethod
     def rect_polygon(rect: Rect, polygon: Polygon):
+        """Check if a rectangle and polygon are colliding."""
         corners = [
             (rect.x, rect.y),
             (rect.x + rect.width, rect.y),
@@ -405,6 +514,7 @@ class CollisionManager:
 
     @staticmethod
     def circle_polygon(circle: Circle, polygon: Polygon):
+        """Check if a circle and polygon are colliding."""
         if polygon.is_obj_over(circle.x, circle.y):
             return True
         for px, py in polygon.points:
@@ -415,6 +525,7 @@ class CollisionManager:
 
     @staticmethod
     def rect_text(rect, text):
+        """Check if a rectangle and text are colliding."""
         text_width = text.txtsurf.get_width()
         text_height = text.txtsurf.get_height()
         return pygame.Rect(*rect.rect).colliderect(
@@ -423,6 +534,7 @@ class CollisionManager:
 
     @staticmethod
     def circle_text(circle, text):
+        """Check if a circle and text are colliding."""
         text_width = text.txtsurf.get_width()
         text_height = text.txtsurf.get_height()
         closest_x = max(text.x, min(circle.x, text.x + text_width))
@@ -432,12 +544,14 @@ class CollisionManager:
 
     @staticmethod
     def rect_image(rect, image):
+        """Check if a rectangle and image are colliding."""
         return pygame.Rect(*rect.rect).colliderect(
             pygame.Rect(image.x, image.y, image.width, image.height)
         )
 
     @staticmethod
     def circle_image(circle, image):
+        """Check if a circle and image are colliding."""
         closest_x = max(image.x, min(circle.x, image.x + image.width))
         closest_y = max(image.y, min(circle.y, image.y + image.height))
         dist = ((circle.x - closest_x) ** 2 + (circle.y - closest_y) ** 2) ** 0.5
@@ -445,6 +559,7 @@ class CollisionManager:
 
     @staticmethod
     def groupcollision(group, shape):
+        """Check if a group and any shape are colliding."""
         for child in group.grouped:
             if is_colliding(child, shape):
                 return True
@@ -455,6 +570,15 @@ class CollisionManager:
 
 
 def check_args(func, name):
+    """Validate that a decorator function takes no arguments.
+    
+    Args:
+        func: The function to validate
+        name: Name of the decorator (for error messages)
+        
+    Raises:
+        ValueError: If function has any parameters
+    """
     sig = signature(func)
     param_names = list(sig.parameters)
     if str(sig) != "()":
@@ -466,6 +590,13 @@ def check_args(func, name):
 # decorartors like this get weird: if you want to be able to pass arguments in you need to handle 2 cases
 # if theres no arguments then it just takes the function as the argument
 def on_tick(func: Callable):
+    """Decorator: call function every frame (60 times per second).
+    
+    Usage:
+        @on_tick
+        def update():
+            pass  # Runs every frame
+    """
     name = currentframe().f_code.co_name
     check_args(func, name)
     _ontick.append(func)
@@ -473,6 +604,15 @@ def on_tick(func: Callable):
 
 
 def on_press(target: Callable | str):
+    """Decorator: call function when a key is pressed.
+    
+    Usage:
+        @on_press  # Any key
+        def any_key(): pass
+        
+        @on_press("space, enter")  # Specific keys
+        def special(): pass
+    """
     if callable(target):
         func = target
         name = currentframe().f_code.co_name
@@ -510,6 +650,13 @@ def on_press(target: Callable | str):
 
 
 def on_hold(target: Callable | str):
+    """Decorator: call function every frame while a key is held down.
+    
+    Usage:
+        @on_hold("w")
+        def move_up():
+            pass  # Runs each frame while 'w' is held
+    """
     if callable(target):
         func = target
         name = currentframe().f_code.co_name
@@ -547,7 +694,15 @@ def on_hold(target: Callable | str):
 
 
 def on_click(target: Callable | Shape):
-
+    """Decorator: call function when mouse is clicked.
+    
+    Usage:
+        @on_click  # Any click
+        def click(): pass
+        
+        @on_click(my_shape)  # Click on specific shape
+        def shape_click(): pass
+    """
     if callable(target):
         name = currentframe().f_code.co_name
         check_args(target, name)
@@ -565,6 +720,12 @@ def on_click(target: Callable | Shape):
 
 
 def on_hover(shape: Shape):
+    """Decorator: call function every frame mouse hovers over a shape.
+    
+    Usage:
+        @on_hover(my_circle)
+        def hover(): pass
+    """
     def decorator(func: Callable):
         name = currentframe().f_code.co_name
         check_args(func, name)
@@ -575,6 +736,12 @@ def on_hover(shape: Shape):
 
 
 def on_drag(shape: Shape):
+    """Decorator: call function every frame a draggable shape is being dragged.
+    
+    Usage:
+        @on_drag(my_rect)
+        def dragging(): pass
+    """
     def decorator(func: Callable):
         name = currentframe().f_code.co_name
         check_args(func, name)
@@ -585,19 +752,39 @@ def on_drag(shape: Shape):
 
 
 def set_bg(color: str):
+    """Set the background color of the window.
+    
+    Args:
+        color: Color as hex string (#RRGGBB) or name (e.g., 'white', 'red')
+    """
     global _bgcolor
     _bgcolor = color
 
 
 def clear_screen():
+    """Remove all shapes from the screen."""
     _shapes.clear()
 
 
 def erase(obj):
+    """Remove a specific shape from the screen.
+    
+    Args:
+        obj: The shape object to remove
+    """
     _shapes.remove(obj)
 
 
 def is_colliding(shape1: Shape, shape2: Shape) -> bool:
+    """Check if two shapes are colliding.
+    
+    Args:
+        shape1: First shape
+        shape2: Second shape
+        
+    Returns:
+        bool: True if shapes overlap, False otherwise
+    """
     shapeName1 = shape1.__class__.__name__.lower()
     shapeName2 = shape2.__class__.__name__.lower()
     if "group" == shapeName1 or "group" == shapeName2:
@@ -623,7 +810,16 @@ def run(
     resizable: bool = True,
     caption: str = "SG window",
 ):
-
+    """Start the graphics window and begin the main game loop.
+    
+    This function blocks until the window is closed.
+    
+    Args:
+        width: Window width in pixels (default: 200)
+        height: Window height in pixels (default: 200)
+        resizable: Whether the window can be resized by user (default: True)
+        caption: Window title bar text (default: "SG window")
+    """
     global _bgcolor
 
     if resizable:
