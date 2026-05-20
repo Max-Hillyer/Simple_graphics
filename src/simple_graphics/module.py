@@ -43,7 +43,7 @@ mouse = Mouse()
 
 class Shape:
     """Base class for all drawable shapes. Do not instantiate directly."""
-    def __init__(self, x, y, color="black", outline=False, draggable=False):
+    def __init__(self, x, y, color="black", outline=False, draggable=False, visible = True):
         """Initialize a shape at position (x, y).
         
         Args:
@@ -58,6 +58,7 @@ class Shape:
         self.color = color
         self.outline = int(outline)
         self.draggable = draggable
+        self.visible = visible
         _shapes.append(self)
 
     def __str__(self):
@@ -83,8 +84,9 @@ class Rect(Shape):
         color: str = "black",
         outline: bool = False,
         draggable: bool = False,
+        visible : bool = True
     ):
-        super().__init__(x, y, color, outline, draggable)
+        super().__init__(x, y, color, outline, draggable, visible)
         self.width = width
         self.height = height
 
@@ -128,8 +130,9 @@ class Circle(Shape):
         color: str = "black",
         outline: bool = False,
         draggable: bool = False,
+        visible: bool = True 
     ):
-        super().__init__(x, y, color, outline, draggable)
+        super().__init__(x, y, color, outline, draggable, visible)
         self.radius = radius
 
     def is_obj_over(self, ox=None, oy=None):
@@ -161,11 +164,13 @@ class Polygon(Shape):
         color: str = "black",
         outline: bool = False,
         draggable: bool = False,
+        visible: bool = True
     ):
         self.color = color
         self.points = points
         self.outline = int(outline)
         self.draggable = draggable
+        self.visible = visible
         _shapes.append(self)
 
     def is_obj_over(self, ox=None, oy=None):
@@ -207,11 +212,13 @@ class Line(Shape):
         width: int = 10,
         color: str = "black",
         draggable: bool = False,
+        visible: bool = True
     ):
         self.color = color
         self.points = points
         self.width = width
         self.draggable = draggable
+        self.visible = visible
         _shapes.append(self)
 
     def is_obj_over(self, ox=None, oy=None):
@@ -265,8 +272,9 @@ class Image(Shape):
         width: int = None,
         height: int = None,
         draggable: bool = False,
+        visible: bool = True
     ):
-        super().__init__(x, y, draggable)
+        super().__init__(x, y, draggable, visible)
         self.img_path = img_path
         self.original_img = pygame.image.load(self.img_path)
 
@@ -308,8 +316,9 @@ class Text(Shape):
         font=_font,
         size: int = 36,
         draggable: bool = False,
+        visible: bool = True
     ):
-        super().__init__(x, y, color, False, draggable)
+        super().__init__(x, y, color, False, draggable, visible)
         self.text = text
         self.size = size
         self.font = pygame.font.SysFont(font, size)
@@ -348,7 +357,7 @@ class Group:
     Allows moving, coloring, and interacting with multiple shapes as one unit.
     Implements the full Python container protocol (__len__, __iter__, etc.).
     """
-    def __init__(self, *shapes: list[Shape]):
+    def __init__(self, *shapes: list[Shape], visible:bool = True):
         """Initialize group with optional initial shapes.
         
         Args:
@@ -905,6 +914,8 @@ def run(
         screen.fill(_bgcolor)
 
         for shape in _shapes:
+            if not shape.visible:
+                continue
             shapeName = shape.__class__.__name__.lower()
             if shapeName == "circle":
                 pygame.draw.circle(

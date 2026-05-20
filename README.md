@@ -47,6 +47,8 @@ Arguments:
 | height | int | the height of the rect | 10 |
 | color | str | the color of the rect | "black" | 
 | outline | bool | whether the rect is just an outline | False | 
+| draggable | bool | whether the rect can be dragged | False | 
+| visible | bool | whether the rect is drawn on screen | True | 
 
 Methods: 
 | Method | Purpose | Arguments | Returns | 
@@ -64,6 +66,8 @@ Arguments:
 | radius | int | the radius of the circle | 10 |
 | color | str | the color of the circle | "black" | 
 | outline | bool | whether the circle is just an outline | False | 
+| draggable | bool | whether the circle can be dragged | False | 
+| visible | bool | whether the circle is drawn on screen | True | 
 
 Methods: 
 | Method | Purpose | Arguments | Returns | 
@@ -78,6 +82,8 @@ Arguments:
 | points | list[tuple] | the vertices of the polygon | None | 
 | color | str | the color of the polygon | "black" | 
 | outline | bool | whther the polygon is just an outline | False | 
+| draggable | bool | whether the polygon can be dragged | False | 
+| visible | bool | whether the polygon is drawn on screen | True | 
 
 Methods: 
 | Method | Purpose | Arguments | Returns | 
@@ -91,6 +97,8 @@ Arguments:
 | points | list[tuple] |the points that the line will connect | None |
 | width | int | the width of the line | 10 | 
 | color | str | the color of the line | "black" | 
+| draggable | bool | whether the line can be dragged | False | 
+| visible | bool | whether the line is drawn on screen | True | 
 
 Methods: 
 | Method | Purpose | Arguments | Returns | 
@@ -106,6 +114,8 @@ Arguments:
 | text | str | the text of the text | None | 
 | color | str | the color of the text | "black" | 
 | size | int | the size of the text | 36 | 
+| draggable | bool | whether the text can be dragged | False | 
+| visible | bool | whether the text is drawn on screen | True | 
 
 Methods: 
 | Method | Purpose | Arguments | Returns | 
@@ -121,6 +131,8 @@ Arguments:
 | img_path | str | the path to the image | None |
 | width | int | the width of the image | the width from the image path | 
 | height | int | the height of the image | the height from the image path | 
+| draggable | bool | whether the image can be dragged | False | 
+| visible | bool | whether the image is drawn on screen | True | 
 
 Methods: 
 | Method | Purpose | Arguments | Returns | 
@@ -144,7 +156,8 @@ group.color = "green"
 Arguments:
 | Argument | Type | Role | Default | 
 | :--- | :---: | :---: | ---: |
-| *shapes | list[Shape] | the shapes to group | None |
+| *shapes | list[Shape] | the shapes to group | None | 
+| visible | bool | whether shapes in group are drawn on screen | True |
 
 Methods:
 | Method | Purpose | Arguments | Returns | 
