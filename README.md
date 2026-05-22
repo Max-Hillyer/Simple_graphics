@@ -192,6 +192,7 @@ Arguments:
 | height | int | the screen height in pixels | 200 | 
 | resizable | bool | whether or not the screen is resizable via dragging | True | 
 | caption | str | the name of the graphics window | "SG window" | 
+| fps | int | the frames per second of the game | 60 | 
 
 
 ## Collisions 

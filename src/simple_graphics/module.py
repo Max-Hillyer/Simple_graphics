@@ -21,7 +21,7 @@ pygame.init()
 
 
 class Mouse:
-    def __init__(self, hiding = False):
+    def __init__(self, hiding=False):
         self.hiding = hiding
 
     @property
@@ -36,16 +36,19 @@ class Mouse:
         """Sets the mouse visibility"""
         self.hiding = state
         pygame.mouse.set_visible(self.hiding)
-        
+
 
 mouse = Mouse()
 
 
 class Shape:
     """Base class for all drawable shapes. Do not instantiate directly."""
-    def __init__(self, x, y, color="black", outline=False, draggable=False, visible = True):
+
+    def __init__(
+        self, x, y, color="black", outline=False, draggable=False, visible=True
+    ):
         """Initialize a shape at position (x, y).
-        
+
         Args:
             x: X coordinate (pixels from left)
             y: Y coordinate (pixels from top)
@@ -84,7 +87,7 @@ class Rect(Shape):
         color: str = "black",
         outline: bool = False,
         draggable: bool = False,
-        visible : bool = True
+        visible: bool = True,
     ):
         super().__init__(x, y, color, outline, draggable, visible)
         self.width = width
@@ -96,11 +99,11 @@ class Rect(Shape):
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this rectangle.
-        
+
         Args:
             ox: X coordinate (default: current mouse x)
             oy: Y coordinate (default: current mouse y)
-            
+
         Returns:
             bool: True if point is inside rectangle, False otherwise
         """
@@ -130,18 +133,18 @@ class Circle(Shape):
         color: str = "black",
         outline: bool = False,
         draggable: bool = False,
-        visible: bool = True 
+        visible: bool = True,
     ):
         super().__init__(x, y, color, outline, draggable, visible)
         self.radius = radius
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this circle.
-        
+
         Args:
             ox: X coordinate (default: current mouse x)
             oy: Y coordinate (default: current mouse y)
-            
+
         Returns:
             bool: True if point is inside circle, False otherwise
         """
@@ -164,7 +167,7 @@ class Polygon(Shape):
         color: str = "black",
         outline: bool = False,
         draggable: bool = False,
-        visible: bool = True
+        visible: bool = True,
     ):
         self.color = color
         self.points = points
@@ -175,11 +178,11 @@ class Polygon(Shape):
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this polygon using ray casting algorithm.
-        
+
         Args:
             ox: X coordinate (default: current mouse x)
             oy: Y coordinate (default: current mouse y)
-            
+
         Returns:
             bool: True if point is inside polygon, False otherwise
         """
@@ -212,7 +215,7 @@ class Line(Shape):
         width: int = 10,
         color: str = "black",
         draggable: bool = False,
-        visible: bool = True
+        visible: bool = True,
     ):
         self.color = color
         self.points = points
@@ -223,11 +226,11 @@ class Line(Shape):
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is near this line (within line width).
-        
+
         Args:
             ox: X coordinate (default: current mouse x)
             oy: Y coordinate (default: current mouse y)
-            
+
         Returns:
             bool: True if point is within line width, False otherwise
         """
@@ -272,7 +275,7 @@ class Image(Shape):
         width: int = None,
         height: int = None,
         draggable: bool = False,
-        visible: bool = True
+        visible: bool = True,
     ):
         super().__init__(x, y, draggable, visible)
         self.img_path = img_path
@@ -288,11 +291,11 @@ class Image(Shape):
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this image rectangle.
-        
+
         Args:
             ox: X coordinate (default: current mouse x)
             oy: Y coordinate (default: current mouse y)
-            
+
         Returns:
             bool: True if point is inside image bounds, False otherwise
         """
@@ -316,7 +319,7 @@ class Text(Shape):
         font=_font,
         size: int = 36,
         draggable: bool = False,
-        visible: bool = True
+        visible: bool = True,
     ):
         super().__init__(x, y, color, False, draggable, visible)
         self.text = text
@@ -330,11 +333,11 @@ class Text(Shape):
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this text's bounding box.
-        
+
         Args:
             ox: X coordinate (default: current mouse x)
             oy: Y coordinate (default: current mouse y)
-            
+
         Returns:
             bool: True if point is inside text bounds, False otherwise
         """
@@ -353,13 +356,14 @@ class Text(Shape):
 
 class Group:
     """Container for grouping multiple shapes for batch operations.
-    
+
     Allows moving, coloring, and interacting with multiple shapes as one unit.
     Implements the full Python container protocol (__len__, __iter__, etc.).
     """
-    def __init__(self, *shapes: list[Shape], visible:bool = True):
+
+    def __init__(self, *shapes: list[Shape], visible: bool = True):
         """Initialize group with optional initial shapes.
-        
+
         Args:
             *shapes: Variable number of Shape objects to add initially
         """
@@ -421,10 +425,10 @@ class Group:
 
     def add(self, *shapes):
         """Add one or more shapes to the group.
-        
+
         Args:
             *shapes: One or more Shape objects to add
-            
+
         Raises:
             TypeError: If any argument is not a Shape
         """
@@ -435,7 +439,7 @@ class Group:
 
     def remove(self, *shapes):
         """Remove one or more shapes from the group.
-        
+
         Args:
             *shapes: One or more Shape objects to remove
         """
@@ -449,11 +453,11 @@ class Group:
 
     def is_obj_over(self, x, y):
         """Check if any shape in group contains the point.
-        
+
         Args:
             x: X coordinate
             y: Y coordinate
-            
+
         Returns:
             bool: True if any child shape contains point, False otherwise
         """
@@ -466,12 +470,10 @@ class Group:
         shapes_str = ", ".join(str(s) for s in self.grouped)
         return f"Group([{shapes_str}])"
 
-    # def __str__(self):
-    #     return "group"
-
 
 class CollisionManager:
     """Static utility class containing collision detection for all shape combinations."""
+
     @staticmethod
     def rect_rect(rect1: Rect, rect2: Rect):
         """Check if two rectangles are colliding."""
@@ -580,11 +582,11 @@ class CollisionManager:
 
 def check_args(func, name):
     """Validate that a decorator function takes no arguments.
-    
+
     Args:
         func: The function to validate
         name: Name of the decorator (for error messages)
-        
+
     Raises:
         ValueError: If function has any parameters
     """
@@ -600,7 +602,7 @@ def check_args(func, name):
 # if theres no arguments then it just takes the function as the argument
 def on_tick(func: Callable):
     """Decorator: call function every frame (60 times per second).
-    
+
     Usage:
         @on_tick
         def update():
@@ -614,11 +616,11 @@ def on_tick(func: Callable):
 
 def on_press(target: Callable | str):
     """Decorator: call function when a key is pressed.
-    
+
     Usage:
         @on_press  # Any key
         def any_key(): pass
-        
+
         @on_press("space, enter")  # Specific keys
         def special(): pass
     """
@@ -660,7 +662,7 @@ def on_press(target: Callable | str):
 
 def on_hold(target: Callable | str):
     """Decorator: call function every frame while a key is held down.
-    
+
     Usage:
         @on_hold("w")
         def move_up():
@@ -704,11 +706,11 @@ def on_hold(target: Callable | str):
 
 def on_click(target: Callable | Shape):
     """Decorator: call function when mouse is clicked.
-    
+
     Usage:
         @on_click  # Any click
         def click(): pass
-        
+
         @on_click(my_shape)  # Click on specific shape
         def shape_click(): pass
     """
@@ -730,11 +732,12 @@ def on_click(target: Callable | Shape):
 
 def on_hover(shape: Shape):
     """Decorator: call function every frame mouse hovers over a shape.
-    
+
     Usage:
         @on_hover(my_circle)
         def hover(): pass
     """
+
     def decorator(func: Callable):
         name = currentframe().f_code.co_name
         check_args(func, name)
@@ -746,11 +749,12 @@ def on_hover(shape: Shape):
 
 def on_drag(shape: Shape):
     """Decorator: call function every frame a draggable shape is being dragged.
-    
+
     Usage:
         @on_drag(my_rect)
         def dragging(): pass
     """
+
     def decorator(func: Callable):
         name = currentframe().f_code.co_name
         check_args(func, name)
@@ -762,7 +766,7 @@ def on_drag(shape: Shape):
 
 def set_bg(color: str):
     """Set the background color of the window.
-    
+
     Args:
         color: Color as hex string (#RRGGBB) or name (e.g., 'white', 'red')
     """
@@ -777,7 +781,7 @@ def clear_screen():
 
 def erase(obj):
     """Remove a specific shape from the screen.
-    
+
     Args:
         obj: The shape object to remove
     """
@@ -786,11 +790,11 @@ def erase(obj):
 
 def is_colliding(shape1: Shape, shape2: Shape) -> bool:
     """Check if two shapes are colliding.
-    
+
     Args:
         shape1: First shape
         shape2: Second shape
-        
+
     Returns:
         bool: True if shapes overlap, False otherwise
     """
@@ -817,12 +821,13 @@ def run(
     width: int = 200,
     height: int = 200,
     resizable: bool = True,
+    fps: int = 60,
     caption: str = "SG window",
 ):
     """Start the graphics window and begin the main game loop.
-    
+
     This function blocks until the window is closed.
-    
+
     Args:
         width: Window width in pixels (default: 200)
         height: Window height in pixels (default: 200)
@@ -947,6 +952,6 @@ def run(
                 pass  # this stops weird edgecases while keeping good rendering
 
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(fps)
 
     pygame.quit()
