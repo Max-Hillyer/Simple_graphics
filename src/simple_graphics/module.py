@@ -7,7 +7,7 @@ from math import pi
 from typing import Callable
 
 _shapes = []
-_ontick = []
+_ontick = {}
 _key_funcs = {}
 _key_hold_funcs = {}
 _mouse_click_funcs = {}
@@ -600,18 +600,32 @@ def check_args(func, name):
 
 # decorartors like this get weird: if you want to be able to pass arguments in you need to handle 2 cases
 # if theres no arguments then it just takes the function as the argument
-def on_tick(func: Callable):
+def on_tick(target: Callable | int):
     """Decorator: call function every frame (60 times per second).
 
     Usage:
         @on_tick
         def update():
             pass  # Runs every frame
+
+        @on_tick(n) #run every n ticks
+        def every_n(): pass
     """
-    name = currentframe().f_code.co_name
-    check_args(func, name)
-    _ontick.append(func)
-    return func
+    if callable(target):
+        func = target
+        name = currentframe().f_code.co_name
+        check_args(func, name)
+        _ontick[None] = func
+        return func
+    else:
+
+        def decorator(func):
+            name = currentframe().f_code.co_name
+            check_args(func, name)
+            _ontick[target] = func
+            return func
+
+        return decorator
 
 
 def on_press(target: Callable | str):
@@ -835,7 +849,7 @@ def run(
         caption: Window title bar text (default: "SG window")
     """
     global _bgcolor
-
+    ticks = 0
     if resizable:
         screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
     else:
@@ -846,6 +860,7 @@ def run(
     running = True
 
     def handle_events():
+        nonlocal ticks
         nonlocal running
         global _dragging_shape
 
@@ -910,10 +925,15 @@ def run(
             if shape.is_obj_over(mouse.x, mouse.y):
                 func()
 
-        for func in _ontick:
-            func()
+        for every, func in _ontick.items():
+            if every is None:
+                func()
+            else:
+                if ticks % every == 0:
+                    func()
 
     while running:
+        ticks += 1
         handle_events()
 
         screen.fill(_bgcolor)

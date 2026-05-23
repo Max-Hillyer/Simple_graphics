@@ -209,14 +209,17 @@ print(is_colliding(ball, rect1)) # True
 Instead of a for loop, Simple Graphics handles events using decorators
 
 ### on_tick 
-The `on_tick` decorator runs the function every frame
+The `on_tick` decorator runs the function every frame or every n frames if specified
 The default framerate is 60 FPS
 Functions with the `on_tick` decorator may not take arguments
 ```python
-@on_tick 
+@on_tick #runs every frame
 def main(): 
-    do_something()
+    pass
 
+@on_tick(3) #runs every 3 frames
+def every3():
+    pass
 run()
 ```
 
