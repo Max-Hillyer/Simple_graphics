@@ -378,3 +378,14 @@ objects defined before a screen clear can no longer be interacted with
 ### erase
 `erase()` deletes a single object
 erased objects can no longer be invoked
+
+### gamestate object
+instead of using the global keyword at the top of your functions, you can instead assign your variable as part of the game class
+```python
+game.x = 10
+
+@on_tick
+def main():
+    game.x += 1
+```
+either this or the global method will work

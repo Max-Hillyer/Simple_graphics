@@ -20,6 +20,28 @@ _font = "Arial"
 pygame.init()
 
 
+class GameState:
+    def __init__(self):
+        self._state = {}
+
+    def __setattr__(self, name, value):
+        if name == "_state":
+            super().__setattr__(name, value)
+        else:
+            self._state[name] = value
+
+    def __getattr__(self, name):
+        if name == "_state":
+            return super().__getattribute__(name)
+        return self._state.get(name, None)
+
+    def __repr__(self):
+        return f"GameState({self._state})"
+
+
+game = GameState()
+
+
 class Mouse:
     def __init__(self, hiding=False):
         self.hiding = hiding
