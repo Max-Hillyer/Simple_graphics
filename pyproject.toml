@@ -1,6 +1,6 @@
 [project]
 name = "simple-graphics-lib"
-version = "0.0.9"
+version = "0.0.11"
 authors = [
   { name="Max-Hillyer", email="maxhillyer7012@gmail.com" },
 ]
