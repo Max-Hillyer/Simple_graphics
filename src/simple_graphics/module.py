@@ -114,6 +114,7 @@ class Rect(Shape):
         super().__init__(x, y, color, outline, draggable, visible)
         self.width = width
         self.height = height
+        self.angle = 0
 
     @property
     def rect(self):
@@ -145,6 +146,9 @@ class Rect(Shape):
         """Calculate and return the perimeter of the rectangle"""
         return (2 * self.width) + (2 * self.height)
 
+    def rotate(self, angle):
+        self.angle += angle 
+        self.angle %= 360
 
 class Circle(Shape):
     def __init__(
@@ -969,12 +973,20 @@ def run(
                     screen, shape.color, (shape.x, shape.y), shape.radius, shape.outline
                 )
             elif shapeName == "rect":
-                pygame.draw.rect(
-                    screen,
-                    shape.color,
-                    shape.rect,
-                    shape.outline,
-                )
+                if shape.angle == 0:
+                    pygame.draw.rect(
+                        screen,
+                        shape.color,
+                        shape.rect,
+                        shape.outline,
+                    )
+                else:
+                    rect_surface = pygame.Surface((shape.width, shape.height), pygame.SRCALPHA)
+                    pygame.draw.rect(rect_surface, shape.color, (0, 0, shape.width, shape.height), shape.outline)
+                    rotated_surface = pygame.transform.rotate(rect_surface, shape.angle)
+                    rotated_rect = rotated_surface.get_rect(center=(shape.x + shape.width // 2, shape.y + shape.height // 2))
+                    screen.blit(rotated_surface, rotated_rect.topleft)
+
             elif shapeName == "polygon":
                 pygame.draw.polygon(screen, shape.color, shape.points, shape.outline)
             elif shapeName == "line":
