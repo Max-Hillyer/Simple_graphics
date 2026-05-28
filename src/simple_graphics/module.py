@@ -3,7 +3,7 @@ import os
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 from inspect import signature, currentframe
-from math import pi
+from math import pi, cos, sin, radians
 from typing import Callable
 
 _shapes = []
@@ -98,6 +98,10 @@ class Shape:
                 values[p] = getattr(self, p)
         return f"{class_name}: {values}"
 
+    def rotate(self, angle):
+        self.angle += angle 
+        self.angle %= 360
+
 
 class Rect(Shape):
     def __init__(
@@ -146,9 +150,6 @@ class Rect(Shape):
         """Calculate and return the perimeter of the rectangle"""
         return (2 * self.width) + (2 * self.height)
 
-    def rotate(self, angle):
-        self.angle += angle 
-        self.angle %= 360
 
 class Circle(Shape):
     def __init__(
@@ -163,6 +164,7 @@ class Circle(Shape):
     ):
         super().__init__(x, y, color, outline, draggable, visible)
         self.radius = radius
+        self.angle = 0 #this is useless but whatever
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this circle.
@@ -200,7 +202,18 @@ class Polygon(Shape):
         self.outline = int(outline)
         self.draggable = draggable
         self.visible = visible
+        self._angle = 0
+        self.original_points = list(points)
         _shapes.append(self)
+
+    @property
+    def angle(self):
+        return self._angle
+
+    @angle.setter
+    def angle(self, value):
+        self._angle = value
+        self._apply_rotation()
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this polygon using ray casting algorithm.
@@ -233,6 +246,33 @@ class Polygon(Shape):
             p1x, p1y = p2x, p2y
         return inside
 
+    def get_center(self):
+        """Calculate and return the center (centroid) of the polygon.
+        
+        Returns:
+            tuple: (center_x, center_y) coordinates of the polygon's centroid
+        """
+        if not self.points:
+            return (0, 0)
+        
+        avg_x = sum(point[0] for point in self.original_points) / len(self.original_points)
+        avg_y = sum(point[1] for point in self.original_points) / len(self.original_points)
+        return (avg_x, avg_y)
+
+    
+    def _apply_rotation(self):
+        angle_rad = radians(self._angle)
+        cx, cy = self.get_center()
+        newpoints = []
+        for x, y in self.original_points:
+            newx = cos(angle_rad) * (x - cx) - sin(angle_rad) * (y - cy) + cx
+            newy = sin(angle_rad) * (x - cx) + cos(angle_rad) * (y - cy) + cy
+            newpoints.append((newx, newy))
+        self.points = newpoints
+
+    def rotate(self, angle):
+        self.angle += angle
+        
 
 class Line(Shape):
     def __init__(
