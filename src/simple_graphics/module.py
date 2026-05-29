@@ -99,7 +99,7 @@ class Shape:
         return f"{class_name}: {values}"
 
     def rotate(self, angle):
-        self.angle += angle 
+        self.angle += angle
         self.angle %= 360
 
 
@@ -164,7 +164,7 @@ class Circle(Shape):
     ):
         super().__init__(x, y, color, outline, draggable, visible)
         self.radius = radius
-        self.angle = 0 #this is useless but whatever
+        self.angle = 0  # this is useless but whatever
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this circle.
@@ -248,18 +248,21 @@ class Polygon(Shape):
 
     def get_center(self):
         """Calculate and return the center (centroid) of the polygon.
-        
+
         Returns:
             tuple: (center_x, center_y) coordinates of the polygon's centroid
         """
         if not self.points:
             return (0, 0)
-        
-        avg_x = sum(point[0] for point in self.original_points) / len(self.original_points)
-        avg_y = sum(point[1] for point in self.original_points) / len(self.original_points)
+
+        avg_x = sum(point[0] for point in self.original_points) / len(
+            self.original_points
+        )
+        avg_y = sum(point[1] for point in self.original_points) / len(
+            self.original_points
+        )
         return (avg_x, avg_y)
 
-    
     def _apply_rotation(self):
         angle_rad = radians(self._angle)
         cx, cy = self.get_center()
@@ -272,7 +275,7 @@ class Polygon(Shape):
 
     def rotate(self, angle):
         self.angle += angle
-        
+
 
 class Line(Shape):
     def __init__(
@@ -288,6 +291,7 @@ class Line(Shape):
         self.width = width
         self.draggable = draggable
         self.visible = visible
+        self.angle = 0
         _shapes.append(self)
 
     def is_obj_over(self, ox=None, oy=None):
@@ -330,6 +334,30 @@ class Line(Shape):
         closest_y = y1 + t * dy
 
         return ((px - closest_x) ** 2 + (py - closest_y) ** 2) ** 0.5
+
+    def rotate(self, angle, around=None):
+        """Rotate the line by angle degrees around a point.
+
+        Args:
+            angle: Rotation angle in degrees
+            around: Point to rotate around (tuple of x, y). If None, rotates around center.
+        """
+        if around is None:
+            avg_x = sum(p[0] for p in self.points) / len(self.points)
+            avg_y = sum(p[1] for p in self.points) / len(self.points)
+            around = (avg_x, avg_y)
+
+        self.angle += angle
+        angle_rad = radians(angle)
+        cx, cy = around
+
+        new_points = []
+        for x, y in self.points:
+            newx = cos(angle_rad) * (x - cx) - sin(angle_rad) * (y - cy) + cx
+            newy = sin(angle_rad) * (x - cx) + cos(angle_rad) * (y - cy) + cy
+            new_points.append((newx, newy))
+
+        self.points = new_points
 
 
 class Image(Shape):
@@ -1021,10 +1049,19 @@ def run(
                         shape.outline,
                     )
                 else:
-                    rect_surface = pygame.Surface((shape.width, shape.height), pygame.SRCALPHA)
-                    pygame.draw.rect(rect_surface, shape.color, (0, 0, shape.width, shape.height), shape.outline)
+                    rect_surface = pygame.Surface(
+                        (shape.width, shape.height), pygame.SRCALPHA
+                    )
+                    pygame.draw.rect(
+                        rect_surface,
+                        shape.color,
+                        (0, 0, shape.width, shape.height),
+                        shape.outline,
+                    )
                     rotated_surface = pygame.transform.rotate(rect_surface, shape.angle)
-                    rotated_rect = rotated_surface.get_rect(center=(shape.x + shape.width // 2, shape.y + shape.height // 2))
+                    rotated_rect = rotated_surface.get_rect(
+                        center=(shape.x + shape.width // 2, shape.y + shape.height // 2)
+                    )
                     screen.blit(rotated_surface, rotated_rect.topleft)
 
             elif shapeName == "polygon":
