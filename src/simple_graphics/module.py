@@ -204,6 +204,7 @@ class Polygon(Shape):
         self.visible = visible
         self._angle = 0
         self.original_points = list(points)
+        self.around = None
         _shapes.append(self)
 
     @property
@@ -265,7 +266,10 @@ class Polygon(Shape):
 
     def _apply_rotation(self):
         angle_rad = radians(self._angle)
-        cx, cy = self.get_center()
+        if self.around == None:
+            cx, cy = self.get_center()
+        else:
+            cx, cy = self.around
         newpoints = []
         for x, y in self.original_points:
             newx = cos(angle_rad) * (x - cx) - sin(angle_rad) * (y - cy) + cx
@@ -273,7 +277,15 @@ class Polygon(Shape):
             newpoints.append((newx, newy))
         self.points = newpoints
 
-    def rotate(self, angle):
+    def rotate(self, angle, around=None):
+        """Rotate the polygon
+
+        Args:
+            angle: how much to rotate the polygon
+            around: the point to rotate the polygon around, defaults to the middle of the polygon
+
+        """
+        self.around = around
         self.angle += angle
 
 
