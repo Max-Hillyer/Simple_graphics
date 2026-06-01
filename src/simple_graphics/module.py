@@ -394,6 +394,7 @@ class Image(Shape):
         self.surface = pygame.transform.scale(
             self.original_img, (self.width, self.height)
         )
+        self.angle = 0
 
     def is_obj_over(self, ox=None, oy=None):
         """Check if a point is inside this image rectangle.
@@ -413,6 +414,10 @@ class Image(Shape):
         x_over = ox > self.x and ox < self.x + self.width
         y_over = oy > self.y and oy < self.y + self.height
         return x_over and y_over
+    
+    def rotate(self, angle):
+        self.angle += angle
+        self.angle %= 360
 
 
 class Text(Shape):
@@ -1090,7 +1095,11 @@ def run(
             elif shapeName == "text":
                 screen.blit(shape.txtsurf, (shape.x, shape.y))
             elif shapeName == "image":
-                screen.blit(shape.surface, (shape.x, shape.y))
+                surface = pygame.transform.rotate(shape.surface, shape.angle)
+                rotated_rect = surface.get_rect(
+                    center=(shape.x + shape.width // 2, shape.y + shape.height // 2)
+                )
+                screen.blit(surface, rotated_rect.topleft)
             elif shapeName == "group":
                 pass  # this stops weird edgecases while keeping good rendering
 
