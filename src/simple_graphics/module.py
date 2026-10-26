@@ -134,13 +134,14 @@ class Rect(Shape):
         Returns:
             bool: True if point is inside rectangle, False otherwise
         """
-        if ox == None:
-            ox = pygame.mouse.get_pos()[0]
-        if oy == None:
-            oy = pygame.mouse.get_pos()[1]
-        x_over = ox > self.x and ox < self.x + self.width
-        y_over = oy > self.y and oy < self.y + self.height
-        return x_over and y_over
+        # if ox == None:
+        #     ox = pygame.mouse.get_pos()[0]
+        # if oy == None:
+        #     oy = pygame.mouse.get_pos()[1]
+        return CollisionManager._point_in_rotated_rect((mouse.x, mouse.y), self) 
+        # x_over = ox > self.x and ox < self.x + self.width
+        # y_over = oy > self.y and oy < self.y + self.height
+        # return x_over and y_over
 
     def get_area(self):
         """Calculate and return the area of the rectangle"""
@@ -1018,6 +1019,12 @@ def is_colliding(shape1: Shape, shape2: Shape) -> bool:
     """
     shapeName1 = shape1.__class__.__name__.lower()
     shapeName2 = shape2.__class__.__name__.lower()
+    if "mouse" in [shapeName1, shapeName2]:
+        if "mouse" == shapeName1:
+            return shape2.is_obj_over(Circle(mouse.x, mouse.y,0,0))
+        else:
+            return shape1.is_obj_over(Circle(mouse.x, mouse.y,0,0))
+        
     if "group" == shapeName1 or "group" == shapeName2:
         method_name = "groupcollision"
         method = getattr(CollisionManager, method_name, None)
