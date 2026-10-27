@@ -1,4 +1,4 @@
-[![PyPI](https://img.shields.io/pypi/v/simple-graphics-lib)](https://pypi.org/project/simple-graphics-lib/)
+[![PyPI](https://img.shields.io/pypi/v/simple-graphics-lib)](https://pypi.org/project/simple-graphics-lib/) [![Static Badge](https://img.shields.io/badge/project-site-blue)](https://max-hillyer.github.io/Simple_graphics) 
 # Simple Graphics
 --- 
 simple graphics is a lightweight python graphics package that offers a more readable alternative to pygame
