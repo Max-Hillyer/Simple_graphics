@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Simple Graphics: readable Python graphics for small games, simulations, and visual experiments."
+        />
+        <title>Simple Graphics | Python graphics without the ceremony</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script defer src="app.js"></script>
+    </head>
+    <body>
+        <header class="topbar">
+            <a class="brand" href="#top" aria-label="Simple Graphics home">simple graphics</a>
+            <nav class="nav-links" aria-label="Primary navigation">
+                <a href="#start">Start here</a><a href="#shapes">Shapes</a><a href="#events">Events</a
+                ><a href="#examples">Examples</a>
+            </nav>
+            <a
+                class="github-link"
+                href="https://github.com/Max-Hillyer/Simple_graphics"
+                target="_blank"
+                rel="noreferrer"
+                >GitHub</a
+            >
+        </header>
+        <main id="top">
+            <section class="hero section-wrap">
+                <div class="hero-copy reveal">
+                    <h1>Make the idea<br /><em>visible.</em></h1>
+                    <p class="hero-lede">
+                        Simple Graphics is a small, readable layer over Pygame. Define shapes, decorate behavior, and
+                        let your program become a window.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="#start">Build your first scene</a
+                        ><a class="text-link" href="#examples">See what people make</a>
+                    </div>
+                    <div class="hero-meta">
+                        <span>v0.0.11</span><span class="meta-rule"></span><span>Python 3.9+</span
+                        ><span class="meta-rule"></span><span>MIT licensed</span>
+                    </div>
+                </div>
+                <div class="hero-art reveal reveal-delay" aria-label="A visual preview showing simple graphics shapes">
+                    <div class="art-window">
+                        <div class="window-bar">
+                            <span class="window-dots"><i></i><i></i><i></i></span><span>scene.py</span>
+                        </div>
+                        <div class="art-stage">
+                            <div class="orbit orbit-one"></div>
+                            <div class="orbit orbit-two"></div>
+                            <div class="sun"></div>
+                            <div class="planet planet-one"></div>
+                            <div class="planet planet-two"></div>
+                            <div class="stage-label">every shape<br />starts as an idea</div>
+                            <div class="coord">x 300&nbsp;&nbsp; y 300</div>
+                        </div>
+                        <div class="art-code">
+                            <span class="code-key">@on_tick</span><span class="code-fn"> def simulate():</span
+                            ><br /><span class="code-indent">planet.x += velocity</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="start" class="section-wrap content-section">
+                <div class="section-heading reveal">
+                    <p class="kicker">01 / Start here</p>
+                    <h2>Getting Started<br /><em>three moves.</em></h2>
+                    <p>
+                        Install the package, make a thing, give it a heartbeat. Objects appear as soon as you create
+                        them.
+                    </p>
+                </div>
+                <div class="quickstart-grid">
+                    <article class="step-card reveal">
+                        <div class="step-number">01</div>
+                        <h3>Install</h3>
+                        <p>Get the package from PyPI.</p>
+                        <pre><code>pip install simple-graphics-lib</code></pre>
+                    </article>
+                    <article class="step-card step-card-accent reveal reveal-delay">
+                        <div class="step-number">02</div>
+                        <h3>Compose</h3>
+                        <p>Shapes register themselves in the scene.</p>
+                        <pre><code>from simple_graphics import *
+
+ball = Circle(140, 120, 24,
+              color="#ff6b4a")</code></pre>
+                    </article>
+                    <article class="step-card reveal reveal-delay-2">
+                        <div class="step-number">03</div>
+                        <h3>Run</h3>
+                        <p>Decorators connect your logic to the loop.</p>
+                        <pre><code>@on_tick
+def update():
+    ball.x += 2
+
+run(400, 300)</code></pre>
+                    </article>
+                </div>
+                <div class="code-callout reveal">
+                    <div>
+                        <span class="callout-label">A complete first scene</span>
+                        <p>Paste this into a file and run it with Python.</p>
+                    </div>
+                    <button class="copy-button" data-copy="quickstart-code">Copy code</button>
+                    <pre id="quickstart-code"><code>from simple_graphics import *
+
+ball = Circle(80, 120, 24, color="#ff6b4a")
+
+@on_tick
+def move():
+    ball.x += 2
+    if ball.x &gt; 400:
+        ball.x = 0
+
+run(width=400, height=240, caption="A small beginning")</code></pre>
+                </div>
+            </section>
+            <section id="shapes" class="section-wrap content-section">
+                <div class="section-heading split-heading reveal">
+                    <div>
+                        <p class="kicker">02 / The visual vocabulary</p>
+                        <h2>Drawing Shapes</h2>
+                    </div>
+                    <p>
+                        Every shape is a live Python object. Change its properties inside an event and the next frame
+                        reflects it.
+                    </p>
+                </div>
+                <div class="shape-grid">
+                    <article class="shape-card reveal">
+                        <div class="shape-preview preview-rect"></div>
+                        <div class="shape-card-copy">
+                            <h3>Rect</h3>
+                            <code>Rect(x, y, width, height)</code>
+                            <p>Rectangles, panels, paddles, cells, and buttons.</p>
+                            <span class="shape-note">rotate · draggable · outline</span>
+                        </div>
+                    </article>
+                    <article class="shape-card reveal reveal-delay">
+                        <div class="shape-preview preview-circle"></div>
+                        <div class="shape-card-copy">
+                            <h3>Circle</h3>
+                            <code>Circle(x, y, radius)</code>
+                            <p>Round bodies for balls, planets, and markers.</p>
+                            <span class="shape-note">area · collision · draggable</span>
+                        </div>
+                    </article>
+                    <article class="shape-card reveal">
+                        <div class="shape-preview preview-polygon"></div>
+                        <div class="shape-card-copy">
+                            <h3>Polygon</h3>
+                            <code>Polygon(points)</code>
+                            <p>Build custom silhouettes from a list of vertices.</p>
+                            <span class="shape-note">rotate around a point</span>
+                        </div>
+                    </article>
+                    <article class="shape-card reveal reveal-delay">
+                        <div class="shape-preview preview-line"></div>
+                        <div class="shape-card-copy">
+                            <h3>Line</h3>
+                            <code>Line(points, width=10)</code>
+                            <p>Connect points into paths, hands, and boundaries.</p>
+                            <span class="shape-note">multi-segment · rotate</span>
+                        </div>
+                    </article>
+                    <article class="shape-card reveal">
+                        <div class="shape-preview preview-text">Hello.</div>
+                        <div class="shape-card-copy">
+                            <h3>Text</h3>
+                            <code>Text(x, y, text)</code>
+                            <p>Render labels and live game state in the scene.</p>
+                            <span class="shape-note">font · size · color</span>
+                        </div>
+                    </article>
+                    <article class="shape-card reveal reveal-delay">
+                        <div class="shape-preview preview-image"><span>IMG</span></div>
+                        <div class="shape-card-copy">
+                            <h3>Image</h3>
+                            <code>Image(x, y, img_path)</code>
+                            <p>Load, scale, and rotate an image asset.</p>
+                            <span class="shape-note">width · height · rotate</span>
+                        </div>
+                    </article>
+                </div>
+                <div class="api-strip reveal">
+                    <div>
+                        <span class="api-label">Shared shape controls</span>
+                        <p>
+                            <code>color</code> &nbsp; <code>visible</code> &nbsp; <code>draggable</code> &nbsp;
+                            <code>is_obj_over()</code>
+                        </p>
+                    </div>
+                    <a class="text-link" href="#reference">Open the reference</a>
+                </div>
+            </section>
+            <section id="events" class="section-wrap content-section">
+                <div class="section-heading split-heading reveal">
+                    <div>
+                        <p class="kicker">03 / Give it a heartbeat</p>
+                        <h2>Event Handling</h2>
+                    </div>
+                    <p>
+                        Use a decorator to say when a function should run. Simple Graphics handles the Pygame event loop
+                        for you.
+                    </p>
+                </div>
+                <div class="events-layout">
+                    <div class="event-list reveal">
+                        <button class="event-tab is-active" data-event="tick">
+                            <span><strong>on_tick</strong><small>Every frame or every n frames</small></span></button
+                        ><button class="event-tab" data-event="press">
+                            <span><strong>on_press</strong><small>Once when a key is pressed</small></span></button
+                        ><button class="event-tab" data-event="hold">
+                            <span><strong>on_hold</strong><small>Every frame while held</small></span></button
+                        ><button class="event-tab" data-event="click">
+                            <span><strong>on_click</strong><small>When the mouse clicks</small></span></button
+                        ><button class="event-tab" data-event="hover">
+                            <span
+                                ><strong>on_hover</strong><small>While the pointer is over a shape</small></span
+                            ></button
+                        ><button class="event-tab" data-event="drag">
+                            <span><strong>on_drag</strong><small>While a draggable shape moves</small></span>
+                        </button>
+                    </div>
+                    <div class="event-demo reveal reveal-delay">
+                        <div class="demo-top"><span>event.py</span><span class="live-pill"></span></div>
+                        <pre id="event-code"><code><span class="code-purple">@on_tick</span>
+<span class="code-blue">def</span> update():
+    ball.x += velocity
+    ball.y += gravity</code></pre>
+                        <div class="demo-footer">
+                            <span id="event-caption">The default callback runs once every frame.</span
+                            ><code>run()</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="examples" class="examples-section">
+                <div class="section-wrap content-section">
+                    <div class="section-heading split-heading reveal">
+                        <div>
+                            <p class="kicker">04 / In the wild</p>
+                            <h2>Small programs,<br /><em>big motion.</em></h2>
+                        </div>
+                        <p>
+                            The repository examples are deliberately approachable. Read one, change one number, and
+                            watch the system answer back.
+                        </p>
+                    </div>
+                    <div class="example-grid">
+                        <a class="example-card reveal" href="../examples/life.py"
+                            ><div class="example-top"><span>example / 01</span><span>↗</span></div>
+                            <div class="example-visual life-visual">
+                                <span class="life-cell c1"></span><span class="life-cell c2"></span
+                                ><span class="life-cell c3"></span><span class="life-cell c4"></span
+                                ><span class="life-cell c5"></span><span class="life-cell c6"></span
+                                ><span class="life-cell c7"></span>
+                            </div>
+                            <h3>Conway's Game of Life</h3>
+                            <p>Grid state, visibility, clicks, and timed evolution.</p>
+                            <span class="example-file">examples/life.py</span></a
+                        ><a class="example-card reveal reveal-delay" href="../examples/orbit.py"
+                            ><div class="example-top"><span>example / 02</span><span>↗</span></div>
+                            <div class="example-visual orbit-visual"><i></i><i></i><i></i><b></b></div>
+                            <h3>Orbital mechanics</h3>
+                            <p>Numerical simulation rendered one tick at a time.</p>
+                            <span class="example-file">examples/orbit.py</span></a
+                        ><a class="example-card reveal reveal-delay-2" href="../examples/blockbreaker.py"
+                            ><div class="example-top"><span>example / 03</span><span>↗</span></div>
+                            <div class="example-visual breaker-visual">
+                                <i></i><i></i><i></i><i></i><b></b><em></em>
+                            </div>
+                            <h3>Block Breaker</h3>
+                            <p>Collision detection, score state, and a tiny game loop.</p>
+                            <span class="example-file">examples/blockbreaker.py</span></a
+                        ><a class="example-card reveal" href="../examples/clock.py"
+                            ><div class="example-top"><span>example / 04</span><span>↗</span></div>
+                            <div class="example-visual clock-visual"><i></i><b></b><em></em></div>
+                            <h3>Live clock</h3>
+                            <p>Lines, text, rotation, and the current time.</p>
+                            <span class="example-file">examples/clock.py</span></a
+                        >
+                    </div>
+                    <div class="more-examples reveal">
+                        <span>Also in the collection</span><a href="../examples/pong.py">Pong <span>↗</span></a
+                        ><a href="../examples/triangle_cutout.py">Triangle cutout <span>↗</span></a>
+                    </div>
+                </div>
+            </section>
+            <section id="reference" class="section-wrap content-section">
+                <div class="section-heading reveal">
+                    <p class="kicker">05 / Keep close</p>
+                    <h2>The compact<br /><em>reference.</em></h2>
+                    <p>These are the pieces you will reach for most often while building.</p>
+                </div>
+                <div class="reference-grid reveal">
+                    <div class="reference-column">
+                        <h3>Scene controls</h3>
+                        <div class="ref-row"><code>run(...)</code><span>Start the window and main loop.</span></div>
+                        <div class="ref-row"><code>set_bg(color)</code><span>Set the background color.</span></div>
+                        <div class="ref-row"><code>clear_screen()</code><span>Remove every shape.</span></div>
+                        <div class="ref-row"><code>erase(shape)</code><span>Remove one shape.</span></div>
+                        <div class="ref-row">
+                            <code>is_colliding(a, b)</code><span>Check whether two shapes overlap.</span>
+                        </div>
+                    </div>
+                    <div class="reference-column">
+                        <h3>State helpers</h3>
+                        <div class="ref-row">
+                            <code>mouse.x / mouse.y</code><span>Read the current pointer position.</span>
+                        </div>
+                        <div class="ref-row">
+                            <code>game.any_name</code><span>Store shared mutable game state.</span>
+                        </div>
+                        <div class="ref-row">
+                            <code>Group(a, b, ...)</code><span>Move and query shapes together.</span>
+                        </div>
+                        <div class="ref-row">
+                            <code>shape.visible</code><span>Keep a shape in the scene but hide it.</span>
+                        </div>
+                        <div class="ref-row">
+                            <code>shape.rotate(angle)</code><span>Rotate supported shapes in degrees.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="footer">
+            <div class="section-wrap footer-inner">
+                <a class="brand" href="#top">simple graphics</a>
+                <p>Make the idea visible.</p>
+                <div>
+                    <a href="https://pypi.org/project/simple-graphics-lib/" target="_blank" rel="noreferrer">PyPI ↗</a
+                    ><a href="https://github.com/Max-Hillyer/Simple_graphics/issues" target="_blank" rel="noreferrer"
+                        >Issues ↗</a
+                    >
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
