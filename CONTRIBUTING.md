@@ -51,6 +51,10 @@ Close the window to stop the program. Other examples are available in `examples/
 Before opening a pull request:
 
 - Run the example or workflow affected by your change.
+- Format your changes:
+  ```bash
+  ruff format
+  ```
 - Check that the package imports correctly:
 
   ```bash
