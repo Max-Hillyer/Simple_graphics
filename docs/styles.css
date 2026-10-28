@@ -545,13 +545,6 @@ h1 em,h2 em{
     line-height:1.4;
     margin:13px 0
 }
-.shape-note{
-    font-size:9px;
-    color:var(--teal);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    font-weight:700
-}
 .api-strip{
     margin-top:16px;
     padding:23px 27px;
@@ -1149,7 +1142,7 @@ h1 em,h2 em{font-family:var(--sans);font-style:normal;color:var(--coral)}
 .step-number{font:18px/1 var(--sans);font-weight:700;margin-bottom:32px}
 .step-card h3{font-size:15px}.step-card p{font-size:11px;margin-bottom:22px}.step-card pre{font-size:11px}.step-card-accent p{color:var(--muted)}.step-card-accent pre{color:var(--teal)}
 .code-callout{margin-top:10px;background:#e5ebe4;padding:22px 24px}.callout-label{font-size:9px}.code-callout p{font:13px var(--sans);color:var(--muted)}.code-callout pre{padding:16px;font-size:11px}.copy-button{top:14px;right:14px;font-size:10px}
-.shape-grid{gap:10px;margin-top:42px}.shape-card{min-height:180px;border-color:var(--line)}.shape-preview{min-width:100px;background:#e6ebe5}.shape-card-copy{padding:18px 14px}.shape-card h3{font-size:15px}.shape-card code{font-size:9px}.shape-card p{font-size:11px;margin:9px 0}.shape-note{font-size:8px}
+.shape-grid{gap:10px;margin-top:42px}.shape-card{min-height:180px;border-color:var(--line)}.shape-preview{min-width:100px;background:#e6ebe5}.shape-card-copy{padding:18px 14px}.shape-card h3{font-size:15px}.shape-card code{font-size:9px}.shape-card p{font-size:11px;margin:9px 0}
 .preview-rect:before{inset:30px 17px}.preview-circle:before{width:65px;height:65px;left:18px;top:40px}.preview-polygon:before{left:20px;top:43px;width:65px;height:65px}.preview-line:before{width:110px}.preview-text{font-size:20px}.preview-image:before{inset:30px 18px}.preview-image span{left:35px;top:69px}
 .api-strip{margin-top:10px;padding:18px 20px}.api-label{font-size:9px}.api-strip p{font-size:11px}.api-strip .text-link{font-size:11px}
 .events-layout{gap:42px;margin-top:42px}.event-tab{padding:13px 0}.event-symbol{font-size:16px}.event-tab strong{font-size:13px}.event-tab small{font-size:10px}.event-demo{min-height:280px}.demo-top,.demo-footer{padding:14px 17px;font-size:10px}.event-demo pre{padding:25px 20px;font-size:12px}
