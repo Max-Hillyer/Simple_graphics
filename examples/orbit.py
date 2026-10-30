@@ -37,28 +37,32 @@ planets = [
         "circle": Circle(565, 300, radius=1, color="#ff9c7a"),
     },
 ]
-
+game.paused = True
+@on_press('space')
+def toggle_pause():
+    game.paused = not game.paused
 
 @on_tick
 def simulate():
-    for p in planets:
-        ax, ay = 0, 0
-        for other in planets:
-            if p is other:
-                continue
-            dx, dy = other["x"] - p["x"], other["y"] - p["y"]
-            dist = math.sqrt(dx**2 + dy**2)
-            if dist > 1:
-                acc = other["mass"] / (dist**2)
-                ax += acc * dx / dist
-                ay += acc * dy / dist
+    if not game.paused:
+        for p in planets:
+            ax, ay = 0, 0
+            for other in planets:
+                if p is other:
+                    continue
+                dx, dy = other["x"] - p["x"], other["y"] - p["y"]
+                dist = math.sqrt(dx**2 + dy**2)
+                if dist > 1:
+                    acc = other["mass"] / (dist**2)
+                    ax += acc * dx / dist
+                    ay += acc * dy / dist
 
-        p["vx"] += ax
-        p["vy"] += ay
-        p["x"] += p["vx"]
-        p["y"] += p["vy"]
-        p["circle"].x = p["x"]
-        p["circle"].y = p["y"]
+            p["vx"] += ax
+            p["vy"] += ay
+            p["x"] += p["vx"]
+            p["y"] += p["vy"]
+            p["circle"].x = p["x"]
+            p["circle"].y = p["y"]
 
 
 run(width=600, height=600, caption="Orbital Mechanics")
