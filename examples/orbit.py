@@ -37,7 +37,7 @@ planets = [
         "circle": Circle(565, 300, radius=1, color="#ff9c7a"),
     },
 ]
-game.paused = True
+game.paused = False
 @on_press('space')
 def toggle_pause():
     game.paused = not game.paused
@@ -65,4 +65,4 @@ def simulate():
             p["circle"].y = p["y"]
 
 
-run(width=600, height=600, caption="Orbital Mechanics")
+run(width=600, height=600, caption="Orbital Mechanics | space to pause")

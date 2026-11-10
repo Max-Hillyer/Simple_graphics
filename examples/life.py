@@ -22,7 +22,7 @@ for y in range(GRID_HEIGHT):
         row.append(cell)
     cells.append(row)
 
-paused = True
+paused = False
 generation = 0
 
 
@@ -105,4 +105,5 @@ run(
     width=GRID_WIDTH * CELL_SIZE,
     height=GRID_HEIGHT * CELL_SIZE,
     caption="Conway's Game of Life - Space: Pause/Play | R: Reset | Click: Toggle Cell",
+    fps=10,
 )
