@@ -1,7 +1,7 @@
 import os
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-import pygame
+import pygame #pip install pygame-ce, not pygame
 from inspect import signature, currentframe
 from math import pi, cos, sin, radians
 from typing import Callable
