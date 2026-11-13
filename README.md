@@ -1,8 +1,8 @@
 [![PyPI](https://img.shields.io/pypi/v/simple-graphics-lib)](https://pypi.org/project/simple-graphics-lib/) [![Static Badge](https://img.shields.io/badge/project-site-blue)](https://max-hillyer.github.io/Simple_graphics) 
 # Simple Graphics
-simple graphics is a lightweight python graphics package that offers a more readable alternative to pygame
+Simple Graphics is a lightweight Python graphics package that offers a more readable alternative to Pygame.
 
-simple graphics is meant to be extremely readable, allowing you to focus on the logic of your code instead of graphic specifics 
+Simple Graphics is designed to be easy to read, allowing you to focus on your code's logic instead of graphics implementation details.
 
 ## Installation
 ### pip
@@ -33,7 +33,7 @@ run(width=400, height=400, caption="My Graphics App")
 
 ## Shapes
 
-Simple Graphics offers support for various shapes, that will automatically appear on the screen when defined
+Simple Graphics supports various shapes that automatically appear on the screen when defined.
 
 ---
 ### Rect 
@@ -108,7 +108,7 @@ Methods:
 | rotate | rotates the line by an angle in degrees, optionally around a point | angle: int, around: tuple | None |
 
 ### Text 
-Note: A text alignment method is currently in development and will arrive in the coming weeks
+Note: A text alignment method is currently in development and will be available in a future release.
 
 Arguments:
 | Argument | Type | Role | Default | 
@@ -159,9 +159,9 @@ line.rotate(90, around=(75, 50))
 ```
 
 ### Group
-Group groups a bunch of objects together, so you can treat them all as one shape, modifying x,y and color and checking for collisions for every shape in the group at once
+`Group` combines multiple objects so you can treat them as one shape, modify their position and color, and check collisions for all the shapes in the group at once.
 
-the below code creates a group of two rectangles
+The following code creates a group containing two rectangles.
 ```python
 r1 = Rect(20, 20)
 r2 = Rect(40, 40)
@@ -201,8 +201,8 @@ group.remove(r2, t1)
 ---
 
 ## Run 
-`run()` is Simple Graphics main function. 
-it creates a screen where all defined objects appear and can be interacted with. 
+`run()` is the main Simple Graphics function.
+It creates a screen where all defined objects appear and can be interacted with.
 
 Arguments:
 | Argument | Type | Role | Default | 
@@ -216,7 +216,7 @@ Arguments:
 
 ## Collisions 
 
-to check whether all supplied shapes overlap, use the `is_colliding()` method:
+To check whether all supplied shapes overlap, use the `is_colliding()` function:
 ```python 
 rect1 = Rect(10, 10)
 ball = Circle(10 , 5)
@@ -228,11 +228,11 @@ print(is_colliding(ball, rect1, rect2)) # True only if every pair overlaps
 ---
 ## Events 
 
-Instead of a for loop, Simple Graphics handles events using decorators
+Instead of a `for` loop, Simple Graphics handles events using decorators.
 ### on_tick 
-The `on_tick` decorator runs the function every frame or every n frames if specified
-The default framerate is 60 FPS
-Functions with the `on_tick` decorator may not take arguments
+The `on_tick` decorator runs the function every frame, or every specified number of frames.
+The default frame rate is 60 FPS.
+Functions decorated with `on_tick` may not take arguments.
 ```python
 @on_tick #runs every frame
 def main(): 
@@ -246,9 +246,9 @@ run()
 
 ### on_press 
 
-the `on_press` runs the decorator whenever a specified button is pressed, or when any button is pressed if none are specified
+The `on_press` decorator runs the function whenever a specified key is pressed, or whenever any key is pressed if no key is specified.
 
-The function below will run whenever w or s is pressed
+The following function runs whenever `w` or `s` is pressed.
 ```python
 @on_press("w,s")
 def do_w():
@@ -257,7 +257,7 @@ def do_w():
 run()
 ```
 
-The function below will run whenever any key is pressed 
+The following function runs whenever any key is pressed.
 ```python
 @on_press
 def any_key():
@@ -266,7 +266,7 @@ def any_key():
 run()
 ```
 
-Functions with the `@on_press` decorator may only take 1 argument, which will show up as the key pressed
+Functions decorated with `@on_press` may take at most one argument, which receives the pressed key.
 ```python
 @on_press 
 def print_key(key):
@@ -283,7 +283,7 @@ Key names are case-insensitive. Common supported names include:
 | Other keys | `"space"`, `"enter"`, `"escape"`, `"tab"`, `"backspace"` |
 | Letters and numbers | `"a"` through `"z"`, `"0"` through `"9"` |
 
-For example, to check for an arrow key press:
+For example, use the following to respond to arrow-key input:
 ```python
 @on_press("left")
 def move_left():
@@ -298,9 +298,9 @@ run()
 
 ### on_hold
 
-the `on_hold` decorator functions exactly like the `on_press` decorator, but the function runs every frame for as long as the key is held, instead of just once
+The `on_hold` decorator works like `on_press`, but runs the function every frame while the key is held instead of only once.
 
-The function below will run for as long as w or s is pressed
+The following function runs as long as `w` or `s` is held.
 ```python
 @on_hold("w,s")
 def do_w():
@@ -309,7 +309,7 @@ def do_w():
 run()
 ```
 
-The function below will run while any key is pressed 
+The following function runs while any key is held.
 ```python
 @on_press
 def any_key():
@@ -318,7 +318,7 @@ def any_key():
 run()
 ```
 
-Functions with the `@on_hold` decorator may only take 1 argument, which will show up as the key held
+Functions decorated with `@on_hold` may take at most one argument, which receives the held key.
 ```python
 @on_press 
 def print_key(key):
@@ -329,9 +329,9 @@ run()
 
 ### on_click
 
-functions defined with the `on_click` decorator will run whenever the specified object is clicked, or whenever any click is detected if none is specified
+Functions decorated with `on_click` run whenever the specified object is clicked, or whenever any click is detected if no object is specified.
 
-the function below will run whenever the button rect is clicked
+The following function runs whenever the button rectangle is clicked.
 ```python
 button = Rect(10, 10)
 @on_click(button)
@@ -341,7 +341,7 @@ def click_button():
 run()
 ```
 
-the function below will run when there is any click at all
+The following function runs whenever a click occurs.
 
 ```python
 @on_click
@@ -352,9 +352,9 @@ run()
 ```
 
 ### on_hover
-functions defined with the `@on_hover` decorator will run whenever the specified object is being hovered over
+Functions decorated with `@on_hover` run whenever the pointer is over the specified object.
 
-the function below will run whenever the mouse is over the rectangle 
+The following function runs whenever the mouse is over the rectangle.
 ```python
 r1 = Rect(200,200, 100, 100)
 
@@ -366,9 +366,9 @@ run(400,400)
 ```
 
 ### on_drag
-functions defined with the `@on_drag` decorator will run whenever the specified object is being dragged
+Functions decorated with `@on_drag` run whenever the specified object is being dragged.
 
-the function below will run whenevr the r1 rect is being dragged
+The following function runs whenever the `r1` rectangle is dragged.
 ```python
 r1 = Rect(200,200,draggable = True)
 
@@ -380,11 +380,11 @@ run(400,400)
 ```
 ---
 ## The mouse
-A mouse object is already initialized in the Simple Graphics import 
+A mouse object is initialized automatically when you import Simple Graphics.
 
-to get mouse coordinates, simply use `mouse.x` and `mouse.y`
+To get the mouse coordinates, use `mouse.x` and `mouse.y`.
 
-Example: 
+Example:
 ```python
 @on_tick
 def main():
@@ -395,34 +395,34 @@ run()
 
 ## dragging 
 
-to make a shape draggable, add the keyword argument to the object initialization: 
+To make a shape draggable, set the `draggable` keyword argument when initializing the object:
 ```python
 r = Rect(250,250, draggable = True)
 ```
-this works for all shapes including images and text
+This works for all shapes, including images and text.
 
 ---
 ## Miscellaneous Functions
 
 ### set_bg
-`set_bg()` simply sets the background to the specified color
+`set_bg()` sets the background to the specified color.
 
-the default background color is white
+The default background color is white.
 ```python
 set_bg("black")
 ``` 
 changes the background color to black
 
 ### clear_screen
-`clear_screen()` clears the screen. 
-objects defined before a screen clear can no longer be interacted with
+`clear_screen()` clears the screen.
+Objects defined before the screen is cleared can no longer be interacted with.
 
 ### erase
-`erase()` deletes a single object
-erased objects can no longer be invoked
+`erase()` deletes a single object.
+Erased objects can no longer be interacted with.
 
 ### gamestate object
-instead of using the global keyword at the top of your functions, you can instead assign your variable as part of the game class
+Instead of using the `global` keyword at the top of your functions, you can assign variables as attributes of the `game` object.
 ```python
 game.x = 10
 
@@ -430,4 +430,4 @@ game.x = 10
 def main():
     game.x += 1
 ```
-either this or the global method will work
+Either approach works.
