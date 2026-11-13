@@ -451,6 +451,75 @@ h1 em,h2 em{
     border-color:var(--coral);
     color:#fff
 }
+.comparison-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    margin-top:58px
+}
+.comparison-card{
+    background:#fff;
+    border:1px solid #e7ece8;
+    padding:25px
+}
+.comparison-card-dark{
+    background:var(--navy);
+    color:#fff;
+    border-color:var(--navy)
+}
+.comparison-card-heading{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:18px;
+    color:var(--teal);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase
+}
+.comparison-card-dark .comparison-card-heading{
+    color:var(--yellow)
+}
+.comparison-card-heading strong{
+    color:var(--ink)
+}
+.comparison-card-dark .comparison-card-heading strong{
+    color:#fff
+}
+.comparison-card pre{
+    min-height:190px;
+    margin:0;
+    padding:18px;
+    overflow:auto;
+    background:#edf2ed;
+    color:var(--ink);
+    font:12px/1.55 monospace
+}
+.comparison-card-dark pre{
+    background:#10242c;
+    color:#d5e2d9
+}
+.comparison-card p{
+    color:var(--muted);
+    font-size:13px;
+    margin:18px 0 0
+}
+.comparison-card-dark p{
+    color:#abc4bd
+}
+.comparison-card code{
+    color:var(--teal)
+}
+.comparison-card-dark code{
+    color:#f2d47b
+}
+.comparison-note{
+    max-width:650px;
+    margin:30px 0 0;
+    color:var(--muted);
+    font:18px var(--serif)
+}
 .shape-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
@@ -975,6 +1044,9 @@ h1 em,h2 em{
     .shape-grid{
         grid-template-columns:repeat(2,1fr)
     }
+    .comparison-grid{
+        grid-template-columns:1fr
+    }
     .example-grid{
         grid-template-columns:repeat(2,1fr)
     }
@@ -1038,6 +1110,11 @@ h1 em,h2 em{
     }
     .quickstart-grid,.shape-grid,.example-grid,.reference-grid{
         grid-template-columns:1fr
+    }
+    .comparison-card-heading{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:5px
     }
     .step-card{
         min-height:260px

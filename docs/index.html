@@ -16,7 +16,7 @@
             <a class="brand" href="#top" aria-label="Simple Graphics home">simple graphics</a>
             <nav class="nav-links" aria-label="Primary navigation">
                 <a href="#start">Start here</a><a href="#shapes">Shapes</a><a href="#events">Events</a
-                ><a href="#examples">Examples</a>
+                ><a href="#comparison">Compare</a><a href="#examples">Examples</a>
             </nav>
             <a
                 class="github-link"
@@ -233,11 +233,84 @@ run(width=400, height=240, caption="A small beginning")</code></pre>
                     </div>
                 </div>
             </section>
+            <section id="comparison" class="section-wrap content-section comparison-section">
+                <div class="section-heading split-heading reveal">
+                    <div>
+                        <p class="kicker">04 / Under the hood</p>
+                        <h2>Simple Graphics<br /><em>vs. Pygame.</em></h2>
+                    </div>
+                    <p>
+                        Simple Graphics is built on Pygame, but provides a higher-level API for common beginner
+                        graphics tasks. Here is the same work in both libraries.
+                    </p>
+                </div>
+                <div class="comparison-grid">
+                    <article class="comparison-card reveal">
+                        <div class="comparison-card-heading">
+                            <span>Draw a circle</span><strong>Simple Graphics</strong>
+                        </div>
+                        <pre><code>from simple_graphics import Circle, run
+
+circle = Circle(200, 200, radius=50,
+                color="red")
+run(400, 400)</code></pre>
+                        <p>Create a shape, then let <code>run()</code> manage the window and main loop.</p>
+                    </article>
+                    <article class="comparison-card comparison-card-dark reveal reveal-delay">
+                        <div class="comparison-card-heading">
+                            <span>Draw a circle</span><strong>Pygame</strong>
+                        </div>
+                        <pre><code>pygame.init()
+screen = pygame.display.set_mode((400, 400))
+clock = pygame.time.Clock()
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    screen.fill("white")
+    pygame.draw.circle(screen, "red",
+                       (200, 200), 50)
+    pygame.display.flip()
+    clock.tick(60)</code></pre>
+                        <p>Initialize the display, process events, draw each frame, and control the frame rate.</p>
+                    </article>
+                    <article class="comparison-card reveal">
+                        <div class="comparison-card-heading">
+                            <span>Handle input</span><strong>Simple Graphics</strong>
+                        </div>
+                        <pre><code>from simple_graphics import on_press, run
+
+@on_press("space")
+def pause():
+    print("Space pressed")
+
+run()</code></pre>
+                        <p>Decorators connect input directly to the function that responds to it.</p>
+                    </article>
+                    <article class="comparison-card comparison-card-dark reveal reveal-delay">
+                        <div class="comparison-card-heading">
+                            <span>Handle input</span><strong>Pygame</strong>
+                        </div>
+                        <pre><code>for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+        running = False
+    elif (event.type == pygame.KEYDOWN
+          and event.key == pygame.K_SPACE):
+        print("Space pressed")</code></pre>
+                        <p>Inspect each event and compare its type and key inside the event loop.</p>
+                    </article>
+                </div>
+                <p class="comparison-note reveal">
+                    Pygame provides lower-level control over rendering, timing, and events. Simple Graphics reduces
+                    that boilerplate so you can focus on the behavior of your program.
+                </p>
+            </section>
             <section id="examples" class="examples-section">
                 <div class="section-wrap content-section">
                     <div class="section-heading split-heading reveal">
                         <div>
-                            <p class="kicker">04 / In the wild</p>
+                            <p class="kicker">05 / In the wild</p>
                             <h2>Small programs,<br /><em>big motion.</em></h2>
                         </div>
                         <p>

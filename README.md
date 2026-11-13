@@ -45,6 +45,91 @@ Simple Graphics supports various shapes that automatically appear on the screen
 when defined.
 
 ---
+
+## Simple Graphics vs. Pygame
+
+Simple Graphics is built on top of Pygame, but provides a higher-level API for
+common beginner graphics tasks. The examples below show the same operations in
+both libraries.
+
+### Create a window and draw a shape
+
+With Simple Graphics, creating a shape adds it to the scene and `run()` starts
+the application:
+
+```python
+from simple_graphics import Circle, run
+
+circle = Circle(200, 200, radius=50, color="red")
+run(400, 400, caption="Simple Graphics")
+```
+
+The equivalent Pygame code requires initializing the display, creating the
+main loop, clearing the screen, drawing the circle, updating the display, and
+handling the quit event:
+
+```python
+import pygame
+
+pygame.init()
+screen = pygame.display.set_mode((400, 400))
+pygame.display.set_caption("Pygame")
+clock = pygame.time.Clock()
+running = True
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    screen.fill("white")
+    pygame.draw.circle(screen, "red", (200, 200), 50)
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
+```
+
+### Handle keyboard input
+
+Simple Graphics uses decorators for common keyboard events:
+
+```python
+from simple_graphics import on_press, run
+
+@on_press("space")
+def pause():
+    print("Space pressed")
+
+run()
+```
+
+In Pygame, keyboard input must be handled inside the event loop:
+
+```python
+import pygame
+
+pygame.init()
+screen = pygame.display.set_mode((400, 400))
+running = True
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            print("Space pressed")
+
+pygame.quit()
+```
+
+Pygame provides lower-level control, while Simple Graphics reduces the
+boilerplate for shapes, event handlers, and the application loop. Pygame may
+be the better choice when you need direct control over rendering, timing, or
+the event system.
+
+---
+
 ### Rect
 `Rect(x, y, width=10, height=10, color="black", outline=False, draggable=False, visible=True)`
 
