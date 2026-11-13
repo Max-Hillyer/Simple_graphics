@@ -52,7 +52,7 @@ Arguments:
 Methods: 
 | Method | Purpose | Arguments | Returns | 
 | :--- | :---: | :---: | ---: |
-| is_obj_over | determines if a point is in the rectangle | x: int, y:int | bool | 
+| is_over | determines if a point is in the rectangle | x: int, y:int | bool | 
 | get_area | returns the area of the rectangle| None | int | 
 | get_perimeter | returns the perimeter of the rectangle | None | int | 
 | rotate | rotates the rectangle by an angle in degrees | angle: int | None |
@@ -72,7 +72,7 @@ Arguments:
 Methods: 
 | Method | Purpose | Arguments | Returns | 
 | :--- | :---: | :---: | ---: | 
-| is_obj_over | determines if a point is in the circle | x: int, y:int | bool |
+| is_over | determines if a point is in the circle | x: int, y:int | bool |
 | get_area | returns the area of the circle | None | int | 
 
 ### Polygon 
@@ -88,7 +88,7 @@ Arguments:
 Methods: 
 | Method | Purpose | Arguments | Returns | 
 | :--- | :---: | :---: | ---: | 
-| is_obj_over | determines if a point is in the polygon | x: int, y:int | bool |
+| is_over | determines if a point is in the polygon | x: int, y:int | bool |
 | rotate | rotates the polygon by an angle in degrees, optionally around a point | angle: int, around: tuple | None |
 
 ### Line
@@ -104,7 +104,7 @@ Arguments:
 Methods: 
 | Method | Purpose | Arguments | Returns | 
 | :--- | :---: | :---: | ---: | 
-| is_obj_over | determines if a point is over the line | x: int, y:int | bool |
+| is_over | determines if a point is over the line | x: int, y:int | bool |
 | rotate | rotates the line by an angle in degrees, optionally around a point | angle: int, around: tuple | None |
 
 ### Text 
@@ -124,7 +124,7 @@ Arguments:
 Methods: 
 | Method | Purpose | Arguments | Returns | 
 | :--- | :---: | :---: | ---: | 
-| is_obj_over | determines if a point is in the text | x: int, y:int | bool |
+| is_over | determines if a point is in the text | x: int, y:int | bool |
 
 ### Image
 Arguments:
@@ -141,7 +141,7 @@ Arguments:
 Methods: 
 | Method | Purpose | Arguments | Returns | 
 | :--- | :---: | :---: | ---: | 
-| is_obj_over | determines if a point is in the image | x: int, y:int | bool |
+| is_over | determines if a point is in the image | x: int, y:int | bool |
 | rotate | rotates the image by an angle in degrees | angle: int | None |
 
 ## Rotation
@@ -184,7 +184,7 @@ Methods:
 | add | appends shapes to the group | *shapes | None | 
 | remove | removes shapes from the group | *shapes | None | 
 | clear | clears the group | None | None | 
-| is_obj_over | checks if a point is over the group | x, y | bool | 
+| is_over | checks if a point is over the group | x, y | bool | 
 
 Examples: 
 ```python
@@ -216,11 +216,14 @@ Arguments:
 
 ## Collisions 
 
-to check for a collision between 2 shapes, use the `is_colliding()` method: 
+to check whether all supplied shapes overlap, use the `is_colliding()` method:
 ```python 
 rect1 = Rect(10, 10)
 ball = Circle(10 , 5)
 print(is_colliding(ball, rect1)) # True
+
+rect2 = Rect(10, 10)
+print(is_colliding(ball, rect1, rect2)) # True only if every pair overlaps
 ```
 ---
 ## Events 

@@ -124,7 +124,7 @@ class Rect(Shape):
     def rect(self):
         return (self.x, self.y, self.width, self.height)
 
-    def is_obj_over(self, ox=None, oy=None):
+    def is_over(self, ox=None, oy=None):
         """Check if a point is inside this rectangle.
 
         Args:
@@ -167,7 +167,7 @@ class Circle(Shape):
         self.radius = radius
         self.angle = 0  # this is useless but whatever
 
-    def is_obj_over(self, ox=None, oy=None):
+    def is_over(self, ox=None, oy=None):
         """Check if a point is inside this circle.
 
         Args:
@@ -217,7 +217,7 @@ class Polygon(Shape):
         self._angle = value
         self._apply_rotation()
 
-    def is_obj_over(self, ox=None, oy=None):
+    def is_over(self, ox=None, oy=None):
         """Check if a point is inside this polygon using ray casting algorithm.
 
         Args:
@@ -307,7 +307,7 @@ class Line(Shape):
         self.angle = 0
         _shapes.append(self)
 
-    def is_obj_over(self, ox=None, oy=None):
+    def is_over(self, ox=None, oy=None):
         """Check if a point is near this line (within line width).
 
         Args:
@@ -397,7 +397,7 @@ class Image(Shape):
         )
         self.angle = 0
 
-    def is_obj_over(self, ox=None, oy=None):
+    def is_over(self, ox=None, oy=None):
         """Check if a point is inside this image rectangle.
 
         Args:
@@ -443,7 +443,7 @@ class Text(Shape):
         """Render and return the text surface for drawing on screen."""
         return self.font.render(str(self.text), True, self.color)
 
-    def is_obj_over(self, ox=None, oy=None):
+    def is_over(self, ox=None, oy=None):
         """Check if a point is inside this text's bounding box.
 
         Args:
@@ -563,7 +563,7 @@ class Group:
         """Remove all shapes from the group."""
         self.grouped.clear()
 
-    def is_obj_over(self, x, y):
+    def is_over(self, x, y):
         """Check if any shape in group contains the point.
 
         Args:
@@ -574,7 +574,7 @@ class Group:
             bool: True if any child shape contains point, False otherwise
         """
         for i in self.grouped:
-            if i.is_obj_over(x, y):
+            if i.is_over(x, y):
                 return True
         return False
 
@@ -693,7 +693,7 @@ class CollisionManager:
         rect_corners = CollisionManager._get_rotated_rect_corners(rect)
 
         for cx, cy in rect_corners:
-            if polygon.is_obj_over(cx, cy):
+            if polygon.is_over(cx, cy):
                 return True
 
         for px, py in polygon.points:
@@ -705,7 +705,7 @@ class CollisionManager:
     @staticmethod
     def circle_polygon(circle: Circle, polygon: Polygon):
         """Check if a circle and polygon are colliding."""
-        if polygon.is_obj_over(circle.x, circle.y):
+        if polygon.is_over(circle.x, circle.y):
             return True
         for px, py in polygon.points:
             dist = ((circle.x - px) ** 2 + (circle.y - py) ** 2) ** 0.5
@@ -1026,9 +1026,9 @@ def is_colliding(*shapes) -> bool:
             shapeName2 = shape2.__class__.__name__.lower()
             if "mouse" in [shapeName1, shapeName2]:
                 if "mouse" == shapeName1:
-                    colliding = shape2.is_obj_over(Circle(mouse.x, mouse.y, 0, 0))
+                    colliding = shape2.is_over(Circle(mouse.x, mouse.y, 0, 0))
                 else:
-                    colliding = shape1.is_obj_over(Circle(mouse.x, mouse.y, 0, 0))
+                    colliding = shape1.is_over(Circle(mouse.x, mouse.y, 0, 0))
             elif "group" == shapeName1 or "group" == shapeName2:
                 colliding = CollisionManager.groupcollision(shape1, shape2)
             else:
@@ -1105,9 +1105,9 @@ def run(
                     _mouse_click_funcs[None]()
 
                 for shape in _shapes:
-                    if shape.is_obj_over() and shape in _mouse_click_funcs:
+                    if shape.is_over() and shape in _mouse_click_funcs:
                         _mouse_click_funcs[shape]()
-                    if shape.draggable and shape.is_obj_over():
+                    if shape.draggable and shape.is_over():
                         _dragging_shape = shape
                         break
 
@@ -1142,7 +1142,7 @@ def run(
                 else:
                     func()
         for shape, func in _hover_funcs.items():
-            if shape.is_obj_over(mouse.x, mouse.y):
+            if shape.is_over(mouse.x, mouse.y):
                 func()
 
         for every, func in _ontick.items():
