@@ -108,11 +108,13 @@ Methods:
 | rotate | rotates the line by an angle in degrees, optionally around a point | angle: int, around: tuple | None |
 
 ### Text 
+Note: A text alignment method is currently in development and will arrive in the coming weeks
+
 Arguments:
 | Argument | Type | Role | Default | 
 | :--- | :---: | :---: | ---: |
-| x | int | the x value of the text | None | 
-| y | int | the y value of the text | None | 
+| x | int | the x value of the upper left corner of the text | None | 
+| y | int | the y value of the upper left corner of the text | None | 
 | text | str | the text of the text | None | 
 | color | str | the color of the text | "black" | 
 | size | int | the size of the text | 36 | 
@@ -224,7 +226,6 @@ print(is_colliding(ball, rect1)) # True
 ## Events 
 
 Instead of a for loop, Simple Graphics handles events using decorators
-
 ### on_tick 
 The `on_tick` decorator runs the function every frame or every n frames if specified
 The default framerate is 60 FPS
