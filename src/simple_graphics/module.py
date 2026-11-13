@@ -1007,39 +1007,48 @@ def erase(obj):
     _shapes.remove(obj)
 
 
-def is_colliding(shape1: Shape, shape2: Shape) -> bool:
-    """Check if two shapes are colliding.
+def is_colliding(*shapes) -> bool:
+    """Check whether all supplied shapes overlap.
+
 
     Args:
-        shape1: First shape
-        shape2: Second shape
+        *shapes: Two or more shapes to compare
 
     Returns:
-        bool: True if shapes overlap, False otherwise
+        bool: True if every pair of shapes overlaps, False otherwise
     """
-    shapeName1 = shape1.__class__.__name__.lower()
-    shapeName2 = shape2.__class__.__name__.lower()
-    if "mouse" in [shapeName1, shapeName2]:
-        if "mouse" == shapeName1:
-            return shape2.is_obj_over(Circle(mouse.x, mouse.y,0,0))
-        else:
-            return shape1.is_obj_over(Circle(mouse.x, mouse.y,0,0))
-        
-    if "group" == shapeName1 or "group" == shapeName2:
-        method_name = "groupcollision"
-        method = getattr(CollisionManager, method_name, None)
-        return method(shape1, shape2)
-    method_name = f"{shapeName1}_{shapeName2}"
-    method = getattr(CollisionManager, method_name, None)
-    if method is None:
-        method_name = f"{shapeName2}_{shapeName1}"
-        method = getattr(CollisionManager, method_name, None)
-        if method is None:
-            raise Exception(
-                f"{type(shape1).__name__} and {type(shape2).__name__} have no collision method"
-            )
-        return method(shape2, shape1)
-    return method(shape1, shape2)
+    if len(shapes) < 2:
+        raise ValueError("is_colliding requires at least 2 shapes")
+
+    for i, shape1 in enumerate(shapes):
+        for shape2 in shapes[i + 1 :]:
+            shapeName1 = shape1.__class__.__name__.lower()
+            shapeName2 = shape2.__class__.__name__.lower()
+            if "mouse" in [shapeName1, shapeName2]:
+                if "mouse" == shapeName1:
+                    colliding = shape2.is_obj_over(Circle(mouse.x, mouse.y, 0, 0))
+                else:
+                    colliding = shape1.is_obj_over(Circle(mouse.x, mouse.y, 0, 0))
+            elif "group" == shapeName1 or "group" == shapeName2:
+                colliding = CollisionManager.groupcollision(shape1, shape2)
+            else:
+                method_name = f"{shapeName1}_{shapeName2}"
+                method = getattr(CollisionManager, method_name, None)
+                if method is None:
+                    method_name = f"{shapeName2}_{shapeName1}"
+                    method = getattr(CollisionManager, method_name, None)
+                    if method is None:
+                        raise Exception(
+                            f"{type(shape1).__name__} and {type(shape2).__name__} have no collision method"
+                        )
+                    colliding = method(shape2, shape1)
+                else:
+                    colliding = method(shape1, shape2)
+
+            if not colliding:
+                return False
+
+    return True
 
 
 def run(
