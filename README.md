@@ -272,6 +272,27 @@ def print_key(key):
 run()
 ```
 
+Key names are case-insensitive. Common supported names include:
+
+| Key | Name |
+| --- | --- |
+| Arrow keys | `"left"`, `"right"`, `"up"`, `"down"` |
+| Other keys | `"space"`, `"enter"`, `"escape"`, `"tab"`, `"backspace"` |
+| Letters and numbers | `"a"` through `"z"`, `"0"` through `"9"` |
+
+For example, to check for an arrow key press:
+```python
+@on_press("left")
+def move_left():
+    print("Left arrow pressed")
+
+@on_hold("right")
+def move_right():
+    print("Right arrow is being held")
+
+run()
+```
+
 ### on_hold
 
 the `on_hold` decorator functions exactly like the `on_press` decorator, but the function runs every frame for as long as the key is held, instead of just once
