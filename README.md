@@ -46,112 +46,137 @@ when defined.
 
 ---
 ### Rect
-Arguments:
-| Argument | Type | Role | Default |
-| :--- | :---: | :---: | ---: |
-| x | int | The x position of the rect | None |
-| y | int | The y position of the rect | None |
-| width | int | the width of the rect | 10 |
-| height | int | the height of the rect | 10 |
-| color | str | the color of the rect | "black" |
-| outline | bool | whether the rect is just an outline | False |
-| draggable | bool | whether the rect can be dragged | False |
-| visible | bool | whether the rect is drawn on screen | True |
+`Rect(x, y, width=10, height=10, color="black", outline=False, draggable=False, visible=True)`
+
+Parameters:
+
+| Param | Type | Default | Role |
+| --- | --- | --- | --- |
+| `x` | `int` | *required* | The x position of the rect |
+| `y` | `int` | *required* | The y position of the rect |
+| `width` | `int` | `10` | The width of the rect |
+| `height` | `int` | `10` | The height of the rect |
+| `color` | `str` | `"black"` | The color of the rect |
+| `outline` | `bool` | `False` | Whether the rect is just an outline |
+| `draggable` | `bool` | `False` | Whether the rect can be dragged |
+| `visible` | `bool` | `True` | Whether the rect is drawn on screen |
 
 Methods:
-| Method | Purpose | Arguments | Returns |
-| :--- | :---: | :---: | ---: |
-| is_over | determines if a point is in the rectangle | x: int, y:int | bool |
-| get_area | returns the area of the rectangle| None | int |
-| get_perimeter | returns the perimeter of the rectangle | None | int |
-| rotate | rotates the rectangle by an angle in degrees | angle: int | None |
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `is_over(x: int, y: int)` | `bool` | Determines if a point is in the rectangle |
+| `get_area()` | `int` | Returns the area of the rectangle |
+| `get_perimeter()` | `int` | Returns the perimeter of the rectangle |
+| `rotate(angle: int)` |  | Rotates the rectangle by an angle in degrees |
 
 ### Circle
-Arguments:
-| Argument | Type | Role | Default |
-| :--- | :---: | :---: | ---: |
-| x | int | the x position of the circle | None |
-| y | int | the y position of the circle | None |
-| radius | int | the radius of the circle | 10 |
-| color | str | the color of the circle | "black" |
-| outline | bool | whether the circle is just an outline | False |
-| draggable | bool | whether the circle can be dragged | False |
-| visible | bool | whether the circle is drawn on screen | True |
+`Circle(x, y, radius=10, color="black", outline=False, draggable=False, visible=True)`
+
+Parameters:
+
+| Param | Type | Default | Role |
+| --- | --- | --- | --- |
+| `x` | `int` | *required* | The x position of the circle |
+| `y` | `int` | *required* | The y position of the circle |
+| `radius` | `int` | `10` | The radius of the circle |
+| `color` | `str` | `"black"` | The color of the circle |
+| `outline` | `bool` | `False` | Whether the circle is just an outline |
+| `draggable` | `bool` | `False` | Whether the circle can be dragged |
+| `visible` | `bool` | `True` | Whether the circle is drawn on screen |
 
 Methods:
-| Method | Purpose | Arguments | Returns |
-| :--- | :---: | :---: | ---: |
-| is_over | determines if a point is in the circle | x: int, y:int | bool |
-| get_area | returns the area of the circle | None | int |
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `is_over(x: int, y: int)` | `bool` | Determines if a point is in the circle |
+| `get_area()` | `int` | Returns the area of the circle |
 
 ### Polygon
-Arguments:
-| Argument | Type | Role | Default |
-| :--- | :---: | :---: | ---: |
-| points | list[tuple] | the vertices of the polygon | None |
-| color | str | the color of the polygon | "black" |
-| outline | bool | whther the polygon is just an outline | False |
-| draggable | bool | whether the polygon can be dragged | False |
-| visible | bool | whether the polygon is drawn on screen | True |
+`Polygon(points, color="black", outline=False, draggable=False, visible=True)`
+
+Parameters:
+
+| Param | Type | Default | Role |
+| --- | --- | --- | --- |
+| `points` | `list[tuple]` | *required* | The vertices of the polygon |
+| `color` | `str` | `"black"` | The color of the polygon |
+| `outline` | `bool` | `False` | Whether the polygon is just an outline |
+| `draggable` | `bool` | `False` | Whether the polygon can be dragged |
+| `visible` | `bool` | `True` | Whether the polygon is drawn on screen |
 
 Methods:
-| Method | Purpose | Arguments | Returns |
-| :--- | :---: | :---: | ---: |
-| is_over | determines if a point is in the polygon | x: int, y:int | bool |
-| rotate | rotates the polygon by an angle in degrees, optionally around a point | angle: int, around: tuple | None |
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `is_over(x: int, y: int)` | `bool` | Determines if a point is in the polygon |
+| `rotate(angle: int, around: tuple = None)` |  | Rotates the polygon by an angle |
 
 ### Line
-Arguments:
-| Argument | Type | Role | Default |
-| :--- | :---: | :---: | ---: |
-| points | list[tuple] |the points that the line will connect | None |
-| width | int | the width of the line | 10 |
-| color | str | the color of the line | "black" |
-| draggable | bool | whether the line can be dragged | False |
-| visible | bool | whether the line is drawn on screen | True |
+`Line(points, width=10, color="black", draggable=False, visible=True)`
+
+Parameters:
+
+| Param | Type | Default | Role |
+| --- | --- | --- | --- |
+| `points` | `list[tuple]` | *required* | The points that the line connects |
+| `width` | `int` | `10` | The width of the line |
+| `color` | `str` | `"black"` | The color of the line |
+| `draggable` | `bool` | `False` | Whether the line can be dragged |
+| `visible` | `bool` | `True` | Whether the line is drawn on screen |
 
 Methods:
-| Method | Purpose | Arguments | Returns |
-| :--- | :---: | :---: | ---: |
-| is_over | determines if a point is over the line | x: int, y:int | bool |
-| rotate | rotates the line by an angle in degrees, optionally around a point | angle: int, around: tuple | None |
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `is_over(x: int, y: int)` | `bool` | Determines if a point is over the line |
+| `rotate(angle: int, around: tuple = None)` |  | Rotates the line by an angle |
 
 ### Text
 Note: A text alignment method is currently in development and will be available in a future release.
 
-Arguments:
-| Argument | Type | Role | Default |
-| :--- | :---: | :---: | ---: |
-| x | int | the x value of the upper left corner of the text | None |
-| y | int | the y value of the upper left corner of the text | None |
-| text | str | the text of the text | None |
-| color | str | the color of the text | "black" |
-| size | int | the size of the text | 36 |
-| draggable | bool | whether the text can be dragged | False |
-| visible | bool | whether the text is drawn on screen | True |
+`Text(x, y, text, color="black", font="Arial", size=36, draggable=False, visible=True)`
+
+Parameters:
+
+| Param | Type | Default | Role |
+| --- | --- | --- | --- |
+| `x` | `int` | *required* | The x position of the text |
+| `y` | `int` | *required* | The y position of the text |
+| `text` | `str` | *required* | The text to display |
+| `color` | `str` | `"black"` | The color of the text |
+| `font` | `str` | `"Arial"` | The font used to render the text |
+| `size` | `int` | `36` | The size of the text |
+| `draggable` | `bool` | `False` | Whether the text can be dragged |
+| `visible` | `bool` | `True` | Whether the text is drawn on screen |
 
 Methods:
-| Method | Purpose | Arguments | Returns |
-| :--- | :---: | :---: | ---: |
-| is_over | determines if a point is in the text | x: int, y:int | bool |
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `is_over(x: int, y: int)` | `bool` | Determines if a point is in the text |
 
 ### Image
-Arguments:
-| Argument | Type | Role | Default |
-| :--- | :---: | :---: | ---: |
-| x | int | the x value of the image | None |
-| y | int | the y value of the image | None |
-| img_path | str | the path to the image | None |
-| width | int | the width of the image | the width from the image path |
-| height | int | the height of the image | the height from the image path |
-| draggable | bool | whether the image can be dragged | False |
-| visible | bool | whether the image is drawn on screen | True |
+`Image(x, y, img_path, width=None, height=None, draggable=False, visible=True)`
+
+Parameters:
+
+| Param | Type | Default | Role |
+| --- | --- | --- | --- |
+| `x` | `int` | *required* | The x position of the image |
+| `y` | `int` | *required* | The y position of the image |
+| `img_path` | `str` | *required* | The path to the image |
+| `width` | `int` | `None` | The image width, or the source image width |
+| `height` | `int` | `None` | The image height, or the source image height |
+| `draggable` | `bool` | `False` | Whether the image can be dragged |
+| `visible` | `bool` | `True` | Whether the image is drawn on screen |
 
 Methods:
-| Method | Purpose | Arguments | Returns |
-| :--- | :---: | :---: | ---: |
-| is_over | determines if a point is in the image | x: int, y:int | bool |
-| rotate | rotates the image by an angle in degrees | angle: int | None |
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `is_over(x: int, y: int)` | `bool` | Determines if a point is in the image |
+| `rotate(angle: int)` |  | Rotates the image by an angle in degrees |
 
 ## Rotation
 
