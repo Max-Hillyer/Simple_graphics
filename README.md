@@ -12,18 +12,18 @@ pip install simple-graphics-lib
 
 ## Quick Start
 ```python
-from simple_graphics import *
+import simple_graphics as sg
 
 # Create shapes
-rect = Rect(50, 50, 100, 100, color="blue")
-circle = Circle(200, 200, radius=50, color="red")
+rect = sg.Rect(50, 50, 100, 100, color="blue")
+circle = sg.Circle(200, 200, radius=50, color="red")
 
 # Define event handlers
-@on_click(rect)
+@sg.on_click(rect)
 def on_rect_click():
     print("Rectangle clicked!")
 
-@on_press("space")
+@sg.on_press("space")
 def on_space_press():
     print("Space pressed!")
 
