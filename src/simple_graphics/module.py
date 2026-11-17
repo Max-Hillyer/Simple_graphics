@@ -1,7 +1,7 @@
 import os
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-import pygame #pip install pygame-ce, not pygame
+import pygame  # pip install pygame-ce, not pygame
 from inspect import signature, currentframe
 from math import pi, cos, sin, radians
 from typing import Callable
@@ -138,7 +138,7 @@ class Rect(Shape):
         #     ox = pygame.mouse.get_pos()[0]
         # if oy == None:
         #     oy = pygame.mouse.get_pos()[1]
-        return CollisionManager._point_in_rotated_rect((mouse.x, mouse.y), self) 
+        return CollisionManager._point_in_rotated_rect((mouse.x, mouse.y), self)
         # x_over = ox > self.x and ox < self.x + self.width
         # y_over = oy > self.y and oy < self.y + self.height
         # return x_over and y_over
@@ -415,7 +415,7 @@ class Image(Shape):
         x_over = ox > self.x and ox < self.x + self.width
         y_over = oy > self.y and oy < self.y + self.height
         return x_over and y_over
-    
+
     def rotate(self, angle):
         self.angle += angle
         self.angle %= 360
@@ -592,32 +592,32 @@ class CollisionManager:
         cx = rect.x + rect.width / 2
         cy = rect.y + rect.height / 2
         angle_rad = radians(rect.angle)
-        
+
         corners_relative = [
             (-rect.width / 2, -rect.height / 2),
             (rect.width / 2, -rect.height / 2),
             (rect.width / 2, rect.height / 2),
             (-rect.width / 2, rect.height / 2),
         ]
-        
+
         corners = []
         for dx, dy in corners_relative:
             newx = cos(angle_rad) * dx - sin(angle_rad) * dy + cx
             newy = sin(angle_rad) * dx + cos(angle_rad) * dy + cy
             corners.append((newx, newy))
-        
+
         return corners
 
     @staticmethod
     def _point_in_rotated_rect(point, rect: Rect):
         """Check if a point is inside a rotated rectangle using SAT (Separating Axis Theorem)."""
         corners = CollisionManager._get_rotated_rect_corners(rect)
-        
+
         # Use ray casting algorithm
         x, y = point
         n = len(corners)
         inside = False
-        
+
         p1x, p1y = corners[0]
         for i in range(n + 1):
             p2x, p2y = corners[i % n]
@@ -639,24 +639,24 @@ class CollisionManager:
         for point in corners1:
             if CollisionManager._point_in_rotated_rect(point, rect2):
                 return True
-        
+
         # Check if corners of rect2 are in rect1
         corners2 = CollisionManager._get_rotated_rect_corners(rect2)
         for point in corners2:
             if CollisionManager._point_in_rotated_rect(point, rect1):
                 return True
-        
+
         return False
 
     @staticmethod
     def rect_circle(rect: Rect, circle: Circle):
         """Check if a rectangle and circle are colliding."""
-        
+
         corners = CollisionManager._get_rotated_rect_corners(rect)
-        
+
         if CollisionManager._point_in_rotated_rect((circle.x, circle.y), rect):
             return True
-        
+
         for i in range(len(corners)):
             p1 = corners[i]
             p2 = corners[(i + 1) % len(corners)]
@@ -664,21 +664,23 @@ class CollisionManager:
             x1, y1 = p1
             x2, y2 = p2
             px, py = circle.x, circle.y
-            
+
             dx = x2 - x1
             dy = y2 - y1
-            
+
             if dx == 0 and dy == 0:
                 dist = ((px - x1) ** 2 + (py - y1) ** 2) ** 0.5
             else:
-                t = max(0, min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)))
+                t = max(
+                    0, min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy))
+                )
                 closest_x = x1 + t * dx
                 closest_y = y1 + t * dy
                 dist = ((px - closest_x) ** 2 + (py - closest_y) ** 2) ** 0.5
-            
+
             if dist < circle.radius:
                 return True
-        
+
         return False
 
     @staticmethod
@@ -699,7 +701,7 @@ class CollisionManager:
         for px, py in polygon.points:
             if CollisionManager._point_in_rotated_rect((px, py), rect):
                 return True
-        
+
         return False
 
     @staticmethod
@@ -718,7 +720,7 @@ class CollisionManager:
         """Check if a rectangle and text are colliding."""
         text_width = text.txtsurf.get_width()
         text_height = text.txtsurf.get_height()
- 
+
         text_corners = [
             (text.x, text.y),
             (text.x + text_width, text.y),
@@ -728,10 +730,13 @@ class CollisionManager:
         for corner in text_corners:
             if CollisionManager._point_in_rotated_rect(corner, rect):
                 return True
-  
+
         rect_corners = CollisionManager._get_rotated_rect_corners(rect)
         for corner in rect_corners:
-            if text.x < corner[0] < text.x + text_width and text.y < corner[1] < text.y + text_height:
+            if (
+                text.x < corner[0] < text.x + text_width
+                and text.y < corner[1] < text.y + text_height
+            ):
                 return True
         return False
 
@@ -748,7 +753,7 @@ class CollisionManager:
     @staticmethod
     def rect_image(rect, image):
         """Check if a rectangle and image are colliding."""
-  
+
         image_corners = [
             (image.x, image.y),
             (image.x + image.width, image.y),
@@ -761,7 +766,10 @@ class CollisionManager:
 
         rect_corners = CollisionManager._get_rotated_rect_corners(rect)
         for corner in rect_corners:
-            if image.x < corner[0] < image.x + image.width and image.y < corner[1] < image.y + image.height:
+            if (
+                image.x < corner[0] < image.x + image.width
+                and image.y < corner[1] < image.y + image.height
+            ):
                 return True
         return False
 
@@ -1026,9 +1034,9 @@ def is_colliding(*shapes) -> bool:
             shapeName2 = shape2.__class__.__name__.lower()
             if "mouse" in [shapeName1, shapeName2]:
                 if "mouse" == shapeName1:
-                    colliding = shape2.is_over(Circle(mouse.x, mouse.y, 0, 0))
+                    colliding = shape2.is_over(mouse.x, mouse.y)
                 else:
-                    colliding = shape1.is_over(Circle(mouse.x, mouse.y, 0, 0))
+                    colliding = shape1.is_over(mouse.x, mouse.y)
             elif "group" == shapeName1 or "group" == shapeName2:
                 colliding = CollisionManager.groupcollision(shape1, shape2)
             else:
