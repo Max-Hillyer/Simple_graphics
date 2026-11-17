@@ -1037,8 +1037,11 @@ def is_colliding(*shapes) -> bool:
                     colliding = shape2.is_over(mouse.x, mouse.y)
                 else:
                     colliding = shape1.is_over(mouse.x, mouse.y)
-            elif "group" == shapeName1 or "group" == shapeName2:
-                colliding = CollisionManager.groupcollision(shape1, shape2)
+            elif "group" in [shapeName1, shapeName2]:
+                if "group" == shapeName1:
+                    colliding = CollisionManager.groupcollision(shape1, shape2)
+                else:
+                    colliding = CollisionManager.groupcollision(shape2, shape1)
             else:
                 method_name = f"{shapeName1}_{shapeName2}"
                 method = getattr(CollisionManager, method_name, None)

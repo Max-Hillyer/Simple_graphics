@@ -173,7 +173,7 @@ won = False
 def collides_at(x, y):
     player.x = x
     player.y = y
-    return any(is_colliding(player, obstacle) for obstacle in obstacles)
+    return is_colliding(player, Group(*obstacles))
 
 
 def move_player(dx, dy):
