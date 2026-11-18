@@ -1136,7 +1136,8 @@ def run(
                     else:
                         _dragging_shape.x = mouse.x
                         _dragging_shape.y = mouse.y
-                        _dragging_funcs[_dragging_shape]()
+                        if _dragging_shape in _dragging_funcs.keys():
+                            _dragging_funcs[_dragging_shape]()
 
             _move_shape(_dragging_shape)
 
