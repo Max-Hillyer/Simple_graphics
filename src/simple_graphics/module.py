@@ -483,7 +483,6 @@ class Text(Shape):
                     new_line += '\n'
                 new_line += word
                 pixels_taken = word_pixels
-        print(repr(new_line))
         return new_line #lazy getting rid of leading \n
 
 class Group:
