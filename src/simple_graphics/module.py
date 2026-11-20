@@ -432,11 +432,14 @@ class Text(Shape):
         size: int = 36,
         draggable: bool = False,
         visible: bool = True,
+        wrap_at: int = None
     ):
         super().__init__(x, y, color, False, draggable, visible)
         self.text = text
+        self.wrap_at = wrap_at
         self.size = size
         self.font = pygame.font.SysFont(font, size)
+        self.text = self._wrap()
 
     @property
     def txtsurf(self):
@@ -465,6 +468,23 @@ class Text(Shape):
         y_over = oy > self.y and oy < self.y + text_height
         return x_over and y_over
 
+    def _wrap(self):
+        if self.wrap_at is None:
+            return self.text
+        pixels_taken = 0
+        new_line = ""
+        for word in self.text.split(' '):
+            word_pixels = self.font.size(word)[0]
+            if pixels_taken + word_pixels <= self.wrap_at:
+                new_line += word + ' '
+                pixels_taken += word_pixels 
+            else:
+                if new_line:
+                    new_line += '\n'
+                new_line += word
+                pixels_taken = word_pixels
+        print(repr(new_line))
+        return new_line #lazy getting rid of leading \n
 
 class Group:
     """Container for grouping multiple shapes for batch operations.

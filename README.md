@@ -26,14 +26,17 @@ import simple_graphics as sg
 rect = sg.Rect(50, 50, 100, 100, color="blue")
 circle = sg.Circle(200, 200, radius=50, color="red")
 
+
 # Define event handlers
 @sg.on_click(rect)
 def on_rect_click():
     print("Rectangle clicked!")
 
+
 @sg.on_press("space")
 def on_space_press():
     print("Space pressed!")
+
 
 # Run the window
 run(width=400, height=400, caption="My Graphics App")
@@ -97,9 +100,11 @@ Simple Graphics uses decorators for common keyboard events:
 ```python
 from simple_graphics import on_press, run
 
+
 @on_press("space")
 def pause():
     print("Space pressed")
+
 
 run()
 ```
@@ -234,6 +239,7 @@ Parameters:
 | `size` | `int` | `36` | The size of the text |
 | `draggable` | `bool` | `False` | Whether the text can be dragged |
 | `visible` | `bool` | `True` | Whether the text is drawn on screen |
+| `wrap_at` | `int` | `None` | The number of pixels to wrap the text at |
 
 Methods:
 
@@ -311,7 +317,7 @@ r1 = Rect(20, 20)
 r2 = Rect(40, 40)
 group = Group(r1, r2)
 
-c1 = Circle(100,100)
+c1 = Circle(100, 100)
 t1 = Text(300, 300, "hi")
 group.add(c1, t1)
 
@@ -340,11 +346,11 @@ To check whether all supplied shapes overlap, use the `is_colliding()` function:
 
 ```python
 rect1 = Rect(10, 10)
-ball = Circle(10 , 5)
-print(is_colliding(ball, rect1)) # True
+ball = Circle(10, 5)
+print(is_colliding(ball, rect1))  # True
 
 rect2 = Rect(10, 10)
-print(is_colliding(ball, rect1, rect2)) # True only if every pair overlaps
+print(is_colliding(ball, rect1, rect2))  # True only if every pair overlaps
 ```
 
 ---
@@ -356,13 +362,16 @@ The `on_tick` decorator runs the function every frame, or every specified number
 The default frame rate is 60 FPS.
 Functions decorated with `on_tick` may not take arguments.
 ```python
-@on_tick #runs every frame
+@on_tick  # runs every frame
 def main():
     pass
 
-@on_tick(3) #runs every 3 frames
+
+@on_tick(3)  # runs every 3 frames
 def every3():
     pass
+
+
 run()
 ```
 
@@ -376,6 +385,7 @@ The following function runs whenever `w` or `s` is pressed.
 def do_w():
     do_soemthing()
 
+
 run()
 ```
 
@@ -385,6 +395,7 @@ The following function runs whenever any key is pressed.
 def any_key():
     do_something()
 
+
 run()
 ```
 
@@ -393,6 +404,7 @@ Functions decorated with `@on_press` may take at most one argument, which receiv
 @on_press
 def print_key(key):
     print(key)
+
 
 run()
 ```
@@ -411,9 +423,11 @@ For example, use the following to respond to arrow-key input:
 def move_left():
     print("Left arrow pressed")
 
+
 @on_hold("right")
 def move_right():
     print("Right arrow is being held")
+
 
 run()
 ```
@@ -428,6 +442,7 @@ The following function runs as long as `w` or `s` is held.
 def do_w():
     do_soemthing()
 
+
 run()
 ```
 
@@ -437,6 +452,7 @@ The following function runs while any key is held.
 def any_key():
     do_something()
 
+
 run()
 ```
 
@@ -445,6 +461,7 @@ Functions decorated with `@on_hold` may take at most one argument, which receive
 @on_press
 def print_key(key):
     print(key)
+
 
 run()
 ```
@@ -456,9 +473,12 @@ Functions decorated with `on_click` run whenever the specified object is clicked
 The following function runs whenever the button rectangle is clicked.
 ```python
 button = Rect(10, 10)
+
+
 @on_click(button)
 def click_button():
     print("button clicked")
+
 
 run()
 ```
@@ -470,6 +490,7 @@ The following function runs whenever a click occurs.
 def print_click():
     print("clicked!")
 
+
 run()
 ```
 
@@ -478,13 +499,15 @@ Functions decorated with `@on_hover` run whenever the pointer is over the specif
 
 The following function runs whenever the mouse is over the rectangle.
 ```python
-r1 = Rect(200,200, 100, 100)
+r1 = Rect(200, 200, 100, 100)
+
 
 @on_hover(r1)
 def p():
     print("hovering")
 
-run(400,400)
+
+run(400, 400)
 ```
 
 ### on_drag
@@ -492,13 +515,15 @@ Functions decorated with `@on_drag` run whenever the specified object is being d
 
 The following function runs whenever the `r1` rectangle is dragged.
 ```python
-r1 = Rect(200,200,draggable = True)
+r1 = Rect(200, 200, draggable=True)
+
 
 @on_drag(r1)
 def do_something():
     print("dragging r1")
 
-run(400,400)
+
+run(400, 400)
 ```
 ---
 
@@ -515,6 +540,7 @@ Example:
 def main():
     print(mouse.x, mouse.y)
 
+
 run()
 ```
 
@@ -524,7 +550,7 @@ To make a shape draggable, set the `draggable` keyword argument when
 initializing the object:
 
 ```python
-r = Rect(250,250, draggable = True)
+r = Rect(250, 250, draggable=True)
 ```
 
 This works for all shapes, including images and text.
@@ -562,6 +588,7 @@ assign variables as attributes of the `game` object.
 
 ```python
 game.x = 10
+
 
 @on_tick
 def main():
