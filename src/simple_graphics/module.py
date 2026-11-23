@@ -435,16 +435,92 @@ class Text(Shape):
         wrap_at: int = None
     ):
         super().__init__(x, y, color, False, draggable, visible)
-        self.text = text
-        self.wrap_at = wrap_at
         self.size = size
         self.font = pygame.font.SysFont(font, size)
-        self.text = self._wrap()
+        self._wrap_at = wrap_at
+        self._text = ""
+        self._lines = []
+        self._txtsurf = None
+        self._txtsurf_key = None
+        self.text = text
+
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        self._text = str(value)
+        self._invalidate_text_cache()
+        self._wrap()
+
+    @property
+    def wrap_at(self):
+        return self._wrap_at
+
+    @wrap_at.setter
+    def wrap_at(self, value):
+        self._wrap_at = value
+        self._invalidate_text_cache()
+        self._wrap()
+
+    def _invalidate_text_cache(self):
+        self._txtsurf = None
+        self._txtsurf_key = None
+
+    def _wrap(self):
+        if self.wrap_at is None:
+            self._lines = self._text.split("\n")
+            return
+
+        wrapped_lines = []
+        space_width = self.font.size(" ")[0]
+
+        for paragraph in self._text.split("\n"):
+            current_line = ""
+            current_width = 0
+
+            for word in paragraph.split():
+                word_width = self.font.size(word)[0]
+                separator_width = space_width if current_line else 0
+
+                if current_line and current_width + separator_width + word_width <= self.wrap_at:
+                    current_line += " " + word
+                    current_width += separator_width + word_width
+                elif current_line:
+                    wrapped_lines.append(current_line)
+                    current_line = word
+                    current_width = word_width
+                else:
+                    current_line = word
+                    current_width = word_width
+
+            wrapped_lines.append(current_line)
+
+        self._lines = wrapped_lines
 
     @property
     def txtsurf(self):
         """Render and return the text surface for drawing on screen."""
-        return self.font.render(str(self.text), True, self.color)
+        key = (tuple(self._lines), self.color)
+        if self._txtsurf is None or self._txtsurf_key != key:
+            line_surfaces = [
+                self.font.render(line, True, self.color)
+                for line in self._lines
+            ]
+            width = max((surface.get_width() for surface in line_surfaces), default=0)
+            line_height = self.font.get_linesize()
+            height = max(line_height * len(line_surfaces), line_height)
+            surface = pygame.Surface(
+                (width, height),
+                pygame.SRCALPHA,
+            )
+            surface.fill((0, 0, 0, 0))
+            for index, line_surface in enumerate(line_surfaces):
+                surface.blit(line_surface, (0, index * line_height))
+            self._txtsurf = surface
+            self._txtsurf_key = key
+        return self._txtsurf
 
     def is_over(self, ox=None, oy=None):
         """Check if a point is inside this text's bounding box.
@@ -467,23 +543,6 @@ class Text(Shape):
         x_over = ox > self.x and ox < self.x + text_width
         y_over = oy > self.y and oy < self.y + text_height
         return x_over and y_over
-
-    def _wrap(self):
-        if self.wrap_at is None:
-            return self.text
-        pixels_taken = 0
-        new_line = ""
-        for word in self.text.split(' '):
-            word_pixels = self.font.size(word)[0]
-            if pixels_taken + word_pixels <= self.wrap_at:
-                new_line += word + ' '
-                pixels_taken += word_pixels 
-            else:
-                if new_line:
-                    new_line += '\n'
-                new_line += word
-                pixels_taken = word_pixels
-        return new_line #lazy getting rid of leading \n
 
 class Group:
     """Container for grouping multiple shapes for batch operations.
