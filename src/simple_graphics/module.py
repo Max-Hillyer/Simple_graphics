@@ -432,7 +432,7 @@ class Text(Shape):
         size: int = 36,
         draggable: bool = False,
         visible: bool = True,
-        wrap_at: int = None
+        wrap_at: int = None,
     ):
         super().__init__(x, y, color, False, draggable, visible)
         self.size = size
@@ -484,7 +484,10 @@ class Text(Shape):
                 word_width = self.font.size(word)[0]
                 separator_width = space_width if current_line else 0
 
-                if current_line and current_width + separator_width + word_width <= self.wrap_at:
+                if (
+                    current_line
+                    and current_width + separator_width + word_width <= self.wrap_at
+                ):
                     current_line += " " + word
                     current_width += separator_width + word_width
                 elif current_line:
@@ -505,8 +508,7 @@ class Text(Shape):
         key = (tuple(self._lines), self.color)
         if self._txtsurf is None or self._txtsurf_key != key:
             line_surfaces = [
-                self.font.render(line, True, self.color)
-                for line in self._lines
+                self.font.render(line, True, self.color) for line in self._lines
             ]
             width = max((surface.get_width() for surface in line_surfaces), default=0)
             line_height = self.font.get_linesize()
@@ -543,6 +545,7 @@ class Text(Shape):
         x_over = ox > self.x and ox < self.x + text_width
         y_over = oy > self.y and oy < self.y + text_height
         return x_over and y_over
+
 
 class Group:
     """Container for grouping multiple shapes for batch operations.
@@ -869,6 +872,76 @@ class CollisionManager:
 
     def no_collsion_method(shape1, shape2):
         raise Exception(f"{type(shape1)} and {type(shape2)} have no collision method")
+
+
+class Sound:
+    def __init__(self, sound_path, volume=50):
+        pygame.mixer.init()
+        self._sound = pygame.mixer.Sound(sound_path)
+        self._channels = []
+        self._paused_channels = []
+        self._stopped = False
+        self.volume = volume
+
+    @property
+    def is_paused(self):
+        active_channels = [
+            channel
+            for channel in self._channels
+            if channel.get_busy() and channel.get_sound() is self._sound
+        ]
+        return bool(active_channels) and all(
+            channel in self._paused_channels for channel in active_channels
+        )
+
+    @property
+    def volume(self):
+        return self._volume
+
+    @volume.setter
+    def volume(self, value):
+        if not 0 <= value <= 100:
+            raise ValueError(f"volume must be 0-100, you entered {value}")
+        self._volume = value
+        self._sound.set_volume(value / 100)
+
+    def play(self):
+        channel = self._sound.play()
+        if channel is not None:
+            self._channels = [
+                active_channel
+                for active_channel in self._channels
+                if active_channel.get_busy()
+                and active_channel.get_sound() is self._sound
+            ]
+            self._channels.append(channel)
+            self._stopped = False
+        return channel
+
+    def stop(self):
+        self._sound.stop()
+        self._channels.clear()
+        self._paused_channels.clear()
+        self._stopped = True
+
+    def pause(self):
+        self._paused_channels.clear()
+        self._channels = [
+            channel
+            for channel in self._channels
+            if channel.get_busy() and channel.get_sound() is self._sound
+        ]
+        for channel in self._channels:
+            channel.pause()
+            self._paused_channels.append(channel)
+
+    def resume(self):
+        for channel in self._paused_channels:
+            if channel.get_busy() and channel.get_sound() is self._sound:
+                channel.unpause()
+        self._paused_channels.clear()
+        if self._stopped:
+            self.play()
 
 
 def check_args(func, name):
