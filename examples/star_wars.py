@@ -32,6 +32,13 @@ crawl = Text(
 
 frame = 0
 
+@on_press('r')
+def restart():
+    global frame 
+    frame = 0
+    crawl.visible = False
+    crawl.y = 600
+
 @on_tick
 def animate_opening():
     global frame
